@@ -3,19 +3,26 @@ import NavBar from "../components/core/navbar";
 import Footer from "../components/core/footer";
 import Image from "next/image";
 import RegisterModal from "../components/modals/registerModal";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import LoginModal from "../components/modals/loginModal";
+import { ACTION_TYPES, StoreContext } from "../pages/_app";
 
 export default function Home() {
-  const [toggleRegisterModal, setToggleRegisterModal] = useState(false);
-  const [toggleLoginModal, setToggleLoginModal] = useState(false);
+  const { dispatch, state } = useContext(StoreContext);
+  const { modalLogin, modalRegister } = state;
 
   const handleToggleRegisterModal = (value) => {
-    setToggleRegisterModal(value);
+    dispatch({
+      type: ACTION_TYPES.SET_MODAL_REGISTER,
+      payload: { modalRegister: value },
+    });
   };
 
   const handleToggleLoginModal = (value) => {
-    setToggleLoginModal(value);
+    dispatch({
+      type: ACTION_TYPES.SET_MODAL_LOGIN,
+      payload: { modalLogin: value },
+    });
   };
 
   return (
@@ -50,14 +57,14 @@ export default function Home() {
           </div>
         </section>
         <section>
-          {toggleRegisterModal ? (
+          {modalRegister ? (
             <RegisterModal
               handleToggleRegisterModal={handleToggleRegisterModal}
             />
           ) : (
             ""
           )}
-          {toggleLoginModal ? (
+          {modalLogin ? (
             <LoginModal
               handleToggleLoginModal={handleToggleLoginModal}
               handleToggleRegisterModal={handleToggleRegisterModal}
