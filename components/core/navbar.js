@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const NavBar = ({ handleToggleRegisterModal }) => {
+const NavBar = ({ handleToggleRegisterModal, handleToggleLoginModal }) => {
   return (
     <div className="bg-white bo rder-b lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-40">
       <div className="container px-4 py-5 mx-auto space-y-4 lg:space-y-0 lg:flex lg:items-center lg:justify-between lg:space-x-10">
@@ -31,8 +31,13 @@ const NavBar = ({ handleToggleRegisterModal }) => {
             >
               Inregistrare
             </button>
-            <div className="flex items-center justify-center h-12 px-4 mt-2 text-sm text-center text-gray-600 transition-colors duration-200 transform border rounded-lg lg:h-10 hover:bg-gray-100 focus:outline-none cursor-pointer">
-              Logare
+            <div
+              className="flex items-center justify-center h-12 px-4 mt-2 text-sm text-center text-gray-600 transition-colors duration-200 transform border rounded-lg lg:h-10 hover:bg-gray-100 focus:outline-none cursor-pointer"
+              onClick={() => {
+                handleToggleLoginModal(true);
+              }}
+            >
+              Autentificare
             </div>
           </div>
         </div>

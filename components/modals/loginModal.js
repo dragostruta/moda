@@ -1,11 +1,11 @@
-const RegisterModal = ({ handleToggleRegisterModal }) => {
+const LoginModal = ({ handleToggleLoginModal, handleToggleRegisterModal }) => {
   return (
     <div
       className="bg-black bg-opacity-50 absolute inset-0 z-50 flex justify-center items-center"
       data-close={true}
       onClick={(event) => {
         if (event.target.getAttribute("data-close")) {
-          handleToggleRegisterModal(false);
+          handleToggleLoginModal(false);
         }
       }}
     >
@@ -17,7 +17,7 @@ const RegisterModal = ({ handleToggleRegisterModal }) => {
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
               data-modal-toggle="authentication-modal"
               onClick={() => {
-                handleToggleRegisterModal(false);
+                handleToggleLoginModal(false);
               }}
             >
               <svg
@@ -39,20 +39,20 @@ const RegisterModal = ({ handleToggleRegisterModal }) => {
             action="#"
           >
             <h3 className="text-xl font-medium text-gray-900">
-              Inregistrare pe platforma
+              Autentificare pe platforma
             </h3>
             <div>
               <label
                 htmlFor="email"
                 className="text-sm font-medium text-gray-900 block mb-2"
               >
-                Email
+                Adresa de email
               </label>
               <input
                 type="email"
                 name="email"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-300 focus:border-teal-300 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5"
                 placeholder="name@company.com"
                 required=""
               />
@@ -62,23 +62,59 @@ const RegisterModal = ({ handleToggleRegisterModal }) => {
                 htmlFor="password"
                 className="text-sm font-medium text-gray-900 block mb-2"
               >
-                Parola
+                Parola ta
               </label>
               <input
                 type="password"
                 name="password"
                 id="password"
                 placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-300 focus:border-teal-300 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5"
                 required=""
               />
+            </div>
+            <div className="flex justify-between">
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="remember"
+                    aria-describedby="remember"
+                    type="checkbox"
+                    className="bg-gray-50 border border-gray-300 focus:ring-3 focus:ring-teal-300 h-4 w-4 rounded"
+                    required=""
+                  />
+                </div>
+                <div className="text-sm ml-3">
+                  <label
+                    htmlFor="remember"
+                    className="font-medium text-gray-900"
+                  >
+                    Tine-ma autentificat
+                  </label>
+                </div>
+              </div>
+              <a href="#" className="text-sm text-teal-500 hover:underline">
+                Ti-ai uitat parola?
+              </a>
             </div>
             <button
               type="submit"
               className="w-full text-white bg-teal-500 hover:bg-teal-300 focus:ring-4 focus:ring-teal-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
-              Inregistrare!
+              Autentificare!
             </button>
+            <div className="text-sm font-medium text-gray-500 flex justify-evenly">
+              <span>Nu ai cont?</span>
+              <div
+                onClick={() => {
+                  handleToggleLoginModal(false);
+                  handleToggleRegisterModal(true);
+                }}
+                className="text-teal-500 hover:underline cursor-pointer"
+              >
+                Creaza un cont
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -86,4 +122,4 @@ const RegisterModal = ({ handleToggleRegisterModal }) => {
   );
 };
 
-export default RegisterModal;
+export default LoginModal;
