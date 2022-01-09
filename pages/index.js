@@ -36,7 +36,7 @@ export default function Home() {
             <h1 className="text-3xl leading-snug text-gray-800 md:text-4xl">
               Demo-ul unei <span className="font-semibold">aplicatii web</span>
               <br className="hidden lg:block" /> pentru{" "}
-              <span className="text-teal-500">Moda SCM </span>
+              <span className="text-teal-400">Moda SCM </span>
             </h1>
           </div>
           <div className="w-full mt-4 lg:mt-0 lg:w-1/2">

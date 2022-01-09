@@ -75,7 +75,7 @@ const RegisterModal = ({ handleToggleRegisterModal }) => {
             </div>
             <button
               type="submit"
-              className="w-full text-white bg-teal-500 hover:bg-teal-300 focus:ring-4 focus:ring-teal-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              className="w-full text-white bg-teal-400 hover:bg-teal-300 focus:ring-4 focus:ring-teal-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
               Inregistrare!
             </button>
