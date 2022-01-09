@@ -2,8 +2,22 @@ import Head from "next/head";
 import NavBar from "../components/core/navbar";
 import Footer from "../components/core/footer";
 import Image from "next/image";
+import RegisterModal from "../components/modals/registerModal";
+import { useState } from "react";
+import LoginModal from "../components/modals/loginModal";
 
 export default function Home() {
+  const [toggleRegisterModal, setToggleRegisterModal] = useState(false);
+  const [toggleLoginModal, setToggleLoginModal] = useState(false);
+
+  const handleToggleRegisterModal = (value) => {
+    setToggleRegisterModal(value);
+  };
+
+  const handleToggleLoginModal = (value) => {
+    setToggleLoginModal(value);
+  };
+
   return (
     <div className="bg-gray-50">
       <Head>
@@ -12,7 +26,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NavBar />
+      <NavBar
+        handleToggleRegisterModal={handleToggleRegisterModal}
+        handleToggleLoginModal={handleToggleLoginModal}
+      />
 
       <main className="flex-1 lg:mt-20 bg-white">
         <section className="container px-4 py-6 mx-auto lg:h-128 lg:space-x-8 lg:flex lg:items-center">
@@ -20,7 +37,7 @@ export default function Home() {
             <h1 className="text-3xl leading-snug text-gray-800 md:text-4xl">
               Demo-ul unei <span className="font-semibold">aplicatii web</span>
               <br className="hidden lg:block" /> pentru{" "}
-              <span className="text-teal-500">Moda SCM </span>
+              <span className="text-teal-400">Moda SCM </span>
             </h1>
           </div>
           <div className="w-full mt-4 lg:mt-0 lg:w-1/2">
@@ -31,6 +48,23 @@ export default function Home() {
               className="w-full h-full max-w-md mx-auto"
             />
           </div>
+        </section>
+        <section>
+          {toggleRegisterModal ? (
+            <RegisterModal
+              handleToggleRegisterModal={handleToggleRegisterModal}
+            />
+          ) : (
+            ""
+          )}
+          {toggleLoginModal ? (
+            <LoginModal
+              handleToggleLoginModal={handleToggleLoginModal}
+              handleToggleRegisterModal={handleToggleRegisterModal}
+            />
+          ) : (
+            ""
+          )}
         </section>
       </main>
 
