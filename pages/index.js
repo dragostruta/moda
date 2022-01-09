@@ -5,7 +5,7 @@ import Image from "next/image";
 import RegisterModal from "../components/modals/registerModal";
 import { useContext, useState } from "react";
 import LoginModal from "../components/modals/loginModal";
-import { ACTION_TYPES, StoreContext } from "../pages/_app";
+import { ACTION_TYPES, StoreContext } from "../store/store-context";
 
 export default function Home() {
   const { dispatch, state } = useContext(StoreContext);
