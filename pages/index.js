@@ -35,7 +35,8 @@ export default function Home() {
         <section className="container px-4 py-6 mx-auto lg:h-128 lg:space-x-8 lg:flex lg:items-center">
           <div className="w-full text-center lg:text-left lg:w-1/2 lg:-mt-8">
             <h1 className="text-3xl leading-snug text-gray-800 md:text-4xl">
-              Demo-ul unei <span className="font-semibold">aplicatii web</span>
+              Demo-ul unei{" "}
+              <span className="font-semibold">aplicatii web Bunaaaaaaa</span>
               <br className="hidden lg:block" /> pentru{" "}
               <span className="text-teal-400 font-bold">Moda SCM </span>
             </h1>
