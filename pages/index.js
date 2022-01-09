@@ -1,5 +1,6 @@
 import Head from "next/head";
 import NavBar from "../components/core/navbar";
+import Footer from "../components/core/footer";
 import Image from "next/image";
 
 export default function Home() {
@@ -33,7 +34,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
