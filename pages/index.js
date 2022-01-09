@@ -1,8 +1,16 @@
 import Head from "next/head";
 import NavBar from "../components/core/navbar";
 import Image from "next/image";
+import RegisterModal from "../components/modals/registerModal";
+import { useState } from "react";
 
 export default function Home() {
+  const [toggleRegisterModal, setToggleRegisterModal] = useState(false);
+
+  const handleToggleRegisterModal = (value) => {
+    setToggleRegisterModal(value);
+  };
+
   return (
     <div className="bg-gray-50">
       <Head>
@@ -11,7 +19,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NavBar />
+      <NavBar handleToggleRegisterModal={handleToggleRegisterModal} />
 
       <main className="flex-1 lg:mt-20 bg-white">
         <section className="container px-4 py-6 mx-auto lg:h-128 lg:space-x-8 lg:flex lg:items-center">
@@ -30,6 +38,15 @@ export default function Home() {
               className="w-full h-full max-w-md mx-auto"
             />
           </div>
+        </section>
+        <section>
+          {toggleRegisterModal ? (
+            <RegisterModal
+              handleToggleRegisterModal={handleToggleRegisterModal}
+            />
+          ) : (
+            ""
+          )}
         </section>
       </main>
 
