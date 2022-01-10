@@ -31,9 +31,9 @@ const updateOperation = async (req, res) => {
         res.status(400);
       }
     } catch (err) {
-      console.error("Error creating or finding operation");
+      console.error("Error updating or finding operation");
       res.status(500);
-      res.json({ message: "Error creating or finding operation", err });
+      res.json({ message: "Error updating or finding operation", err });
     }
   }
 };
