@@ -5,7 +5,7 @@ import { StoreContext } from "../../store/store-context";
 import SideBar from "../../components/nav/sidebar";
 
 const Dashboard = () => {
-  const { dispatch } = useContext(StoreContext);
+  const { dispatch, state } = useContext(StoreContext);
 
   useEffect(() => {
     toggleLoadingSpinner(false, dispatch);

@@ -2,22 +2,15 @@ import Head from "next/head";
 import NavBar from "../components/nav/navbar";
 import Footer from "../components/core/footer";
 import Image from "next/image";
-import RegisterModal from "../components/modals/registerModal";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LoginModal from "../components/modals/loginModal";
 import { ACTION_TYPES, StoreContext } from "../store/store-context";
 import LoadingSpinner from "../components/loading/loadingSpinner";
+import { toggleLoadingSpinner } from "../lib/utils";
 
 export default function Home() {
   const { dispatch, state } = useContext(StoreContext);
-  const { modalLogin, modalRegister, loadingSpinner } = state;
-
-  const handleToggleRegisterModal = (value) => {
-    dispatch({
-      type: ACTION_TYPES.SET_MODAL_REGISTER,
-      payload: { modalRegister: value },
-    });
-  };
+  const { modalLogin, loadingSpinner } = state;
 
   const handleToggleLoginModal = (value) => {
     dispatch({
@@ -25,6 +18,11 @@ export default function Home() {
       payload: { modalLogin: value },
     });
   };
+
+  useEffect(() => {
+    toggleLoadingSpinner(false, dispatch);
+    handleToggleLoginModal(false);
+  }, []);
 
   return (
     <div className="bg-gray-50 flex flex-col h-screen">
@@ -34,10 +32,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NavBar
-        handleToggleRegisterModal={handleToggleRegisterModal}
-        handleToggleLoginModal={handleToggleLoginModal}
-      />
+      <NavBar handleToggleLoginModal={handleToggleLoginModal} />
 
       <main className="flex-1 lg:mt-20 bg-white flex-grow">
         <section className="container px-4 py-6 mx-auto lg:h-128 lg:space-x-8 lg:flex lg:items-center">
@@ -58,18 +53,8 @@ export default function Home() {
           </div>
         </section>
         <section>
-          {modalRegister ? (
-            <RegisterModal
-              handleToggleRegisterModal={handleToggleRegisterModal}
-            />
-          ) : (
-            ""
-          )}
           {modalLogin ? (
-            <LoginModal
-              handleToggleLoginModal={handleToggleLoginModal}
-              handleToggleRegisterModal={handleToggleRegisterModal}
-            />
+            <LoginModal handleToggleLoginModal={handleToggleLoginModal} />
           ) : (
             ""
           )}

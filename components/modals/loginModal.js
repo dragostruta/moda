@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import validator from "validator";
 import { useRouter } from "next/router";
-import { magic } from "../../lib/magic-client";
+import { getMetaData, magic } from "../../lib/magic-client";
 import { StoreContext } from "../../store/store-context";
 import { toggleLoadingSpinner } from "../../lib/utils";
+import { ACTION_TYPES } from "../../store/store-context";
 
-const LoginModal = ({ handleToggleLoginModal, handleToggleRegisterModal }) => {
+const LoginModal = ({ handleToggleLoginModal }) => {
   const [userMsg, setUserMsg] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const { dispatch } = useContext(StoreContext);
@@ -22,6 +23,10 @@ const LoginModal = ({ handleToggleLoginModal, handleToggleRegisterModal }) => {
           email: userEmail,
         });
         if (didToken) {
+          dispatch({
+            type: ACTION_TYPES.SET_LOGGED_USER,
+            payload: { loggedUser: await getMetaData() },
+          });
           router.push("/dashboard");
         }
       } catch {
