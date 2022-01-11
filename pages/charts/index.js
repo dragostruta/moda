@@ -17,7 +17,7 @@ const Dashboard = () => {
         <NavBar />
       </section>
       <SideBar />
-      <div className="p-10 text-2xl font-bold flex-1 ">Dashboard</div>
+      <div className="p-10 text-2xl font-bold flex-1 ">Charts</div>
     </div>
   );
 };
