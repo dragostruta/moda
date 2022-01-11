@@ -6,10 +6,11 @@ import RegisterModal from "../components/modals/registerModal";
 import { useContext, useState } from "react";
 import LoginModal from "../components/modals/loginModal";
 import { ACTION_TYPES, StoreContext } from "../store/store-context";
+import LoadingSpinner from "../components/loading/loadingSpinner";
 
 export default function Home() {
   const { dispatch, state } = useContext(StoreContext);
-  const { modalLogin, modalRegister } = state;
+  const { modalLogin, modalRegister, loadingSpinner } = state;
 
   const handleToggleRegisterModal = (value) => {
     dispatch({
@@ -73,6 +74,7 @@ export default function Home() {
             ""
           )}
         </section>
+        <section>{loadingSpinner ? <LoadingSpinner /> : ""}</section>
       </main>
 
       <Footer />

@@ -5,6 +5,7 @@ export const StoreContext = createContext();
 export const ACTION_TYPES = {
   SET_MODAL_LOGIN: "SET_MODAL_LOGIN",
   SET_MODAL_REGISTER: "SET_MODAL_REGISTER",
+  SET_LOADING_SPINNER: "SET_LOADING_SPINNER"
 };
 
 const storeReducer = (state, action) => {
@@ -15,6 +16,9 @@ const storeReducer = (state, action) => {
     case ACTION_TYPES.SET_MODAL_REGISTER: {
       return { ...state, modalRegister: action.payload.modalRegister };
     }
+    case ACTION_TYPES.SET_LOADING_SPINNER: {
+        return { ...state, loadingSpinner: action.payload.loadingSpinner };
+      }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -24,6 +28,7 @@ const StoreProvider = ({ children }) => {
   const initialState = {
     modalLogin: false,
     modalRegister: false,
+    loadingSpinner: false
   };
 
   const [state, dispatch] = useReducer(storeReducer, initialState);

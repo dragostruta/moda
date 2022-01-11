@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "airtable": "^0.11.1",
+    "magic-sdk": "^7.0.0",
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "swr": "^1.1.2"
+    "swr": "^1.1.2",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
