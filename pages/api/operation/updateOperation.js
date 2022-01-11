@@ -1,7 +1,7 @@
 import {
-    findOperationById,
+  findOperationById,
   updateOperationByFields,
-} from "../../lib/airtable";
+} from "../../../lib/airtable";
 
 const updateOperation = async (req, res) => {
   if (req.method === "PUT") {

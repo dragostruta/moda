@@ -1,4 +1,4 @@
-import { findOperationAll } from "../../lib/airtable";
+import { findOperationAll } from "../../../lib/airtable";
 
 const getOperationAll = async (req, res) => {
   if (req.method === "GET") {

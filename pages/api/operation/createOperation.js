@@ -1,4 +1,7 @@
-import { findOperationById, createOperationByFields } from "../../lib/airtable";
+import {
+  findOperationById,
+  createOperationByFields,
+} from "../../../lib/airtable";
 
 const createOperation = async (req, res) => {
   if (req.method === "POST") {
