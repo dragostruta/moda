@@ -13,7 +13,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen md:flex bg-gray-100 pt-20">
+    <div className="relative min-h-screen md:flex bg-gray-100 lg:pt-20">
       <section>
         <NavBar />
       </section>
