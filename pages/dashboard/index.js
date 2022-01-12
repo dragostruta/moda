@@ -3,6 +3,7 @@ import NavBar from "../../components/nav/navbar";
 import { toggleLoadingSpinner } from "../../lib/utils";
 import { StoreContext } from "../../store/store-context";
 import SideBar from "../../components/nav/sidebar";
+import DashboardContent from "../../components/content/dashboard";
 
 const Dashboard = () => {
   const { dispatch, state } = useContext(StoreContext);
@@ -12,12 +13,12 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen md:flex bg-gray-100 pt-20">
+    <div className="relative min-h-screen md:flex bg-gray-100 lg:pt-20">
       <section>
         <NavBar />
       </section>
       <SideBar />
-      <div className="p-10 text-2xl font-bold flex-1 ">Dashboard</div>
+      <DashboardContent />
     </div>
   );
 };
