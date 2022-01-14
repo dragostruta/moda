@@ -3,6 +3,7 @@ import NavBar from "../../components/nav/navbar";
 import { toggleLoadingSpinner } from "../../lib/utils";
 import { StoreContext } from "../../store/store-context";
 import SideBar from "../../components/nav/sidebar";
+import ChartsContent from "../../components/content/charts";
 
 const Dashboard = () => {
   const { dispatch } = useContext(StoreContext);
@@ -17,7 +18,7 @@ const Dashboard = () => {
         <NavBar />
       </section>
       <SideBar />
-      <div className="p-10 text-2xl font-bold flex-1 ">Charts</div>
+      <ChartsContent />
     </div>
   );
 };
