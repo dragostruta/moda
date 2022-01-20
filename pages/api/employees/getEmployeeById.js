@@ -1,18 +1,18 @@
-import { findOperationById } from "../../../components/database/operations";
+import { findEmployeeById } from "../../../components/database/employees";
 
-const getOperationById = async (req, res) => {
+const getEmployeeById = async (req, res) => {
   if (req.method === "GET") {
     const { id } = req.query;
 
     try {
       if (id) {
-        const records = await findOperationById(id);
+        const records = await findEmployeeById(id);
 
         if (records.length !== 0) {
           res.json(records);
           res.status(200);
         } else {
-          res.json({ message: "operation could not be found" });
+          res.json({ message: "employee could not be found" });
           res.status(400);
         }
       } else {
@@ -20,9 +20,9 @@ const getOperationById = async (req, res) => {
         res.status(400);
       }
     } catch (err) {
-      console.error("Error finding operation");
+      console.error("Error finding employee");
       res.status(500);
-      res.json({ message: "Error finding operation", err });
+      res.json({ message: "Error finding employee", err });
     }
   }
 };

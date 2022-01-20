@@ -51,7 +51,7 @@ const NavBar = ({ handleToggleLoginModal }) => {
         <div className="lg:flex lg:flex-row lg:items-center lg:justify-between lg:flex-1">
           <div className="flex flex-col space-y-3 lg:space-y-0 lg:flex-row lg:space-x-6 xl:space-x-8 lg:items-center">
             {router.route === "/" && loggedUser ? (
-              <Link href={"/dashboard"}>
+              <Link href={"/charts"}>
                 <a>
                   <span className="font-semibold hover:text-teal-400 text-md">
                     Acasa

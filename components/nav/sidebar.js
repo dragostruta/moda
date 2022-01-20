@@ -9,9 +9,6 @@ const SideBar = () => {
 
   useEffect(() => {
     switch (router.route) {
-      case "/dashboard":
-        setBtnColored("home");
-        break;
       case "/operations":
         setBtnColored("operations");
         break;
@@ -30,22 +27,6 @@ const SideBar = () => {
   return (
     <div className="bg-white border-r font-semibold w-64 space-y-6 px-2 py-7 absolute left-0 transform -translate-x-full transition duration-200 ease-in-out md:relative md:translate-x-0">
       <nav>
-        <Link href="/dashboard">
-          <a
-            className={
-              (btnColored === "home" ? "text-teal-300 " : "") +
-              "block py-2.5 px-6 transition duration-200 hover:text-teal-300 cursor-pointer"
-            }
-          >
-            <div className="flex">
-              <div className="pr-2">
-                <HomeIcon />
-              </div>
-              <span>Acasa</span>
-            </div>
-          </a>
-        </Link>
-        <div className="border-t border-solid border-gray-200" />
         <Link href="/operations">
           <a
             className={

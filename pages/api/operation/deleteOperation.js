@@ -1,4 +1,7 @@
-import { findOperationById, deleteOperationById } from "../../../lib/airtable";
+import {
+  findOperationById,
+  deleteOperationById,
+} from "../../../components/database/operations";
 
 const deleteOperation = async (req, res) => {
   if (req.method === "DELETE") {

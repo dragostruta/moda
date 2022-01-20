@@ -63,7 +63,7 @@ const Operations = () => {
 
   return (
     <div className="p-10 text-2xl font-bold flex-1 ">
-      <section className="antialiased bg-gray- px-4">
+      <section className="antialiased px-4">
         <div className="flex flex-col justify-center h-full">
           <div className="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg border border-gray-200">
             <header className="px-5 py-4 border-b border-gray-100">

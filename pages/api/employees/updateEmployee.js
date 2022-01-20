@@ -1,19 +1,19 @@
 import {
-  findOperationById,
-  updateOperationByFields,
-} from "../../../components/database/operations";
+  findEmployeeById,
+  updateEmployeeByFields,
+} from "../../../components/database/employees";
 
-const updateOperation = async (req, res) => {
+const updateEmployee = async (req, res) => {
   if (req.method === "PUT") {
     const { id, Name } = req.body;
 
     try {
       if (id) {
-        const initialRecord = await findOperationById(id);
+        const initialRecord = await findEmployeeById(id);
 
         if (initialRecord.length !== 0) {
           if (Name) {
-            const records = await updateOperationByFields({
+            const records = await updateEmployeeByFields({
               id: initialRecord[0].id,
               fields: { id, Name },
             });
@@ -38,4 +38,4 @@ const updateOperation = async (req, res) => {
   }
 };
 
-export default updateOperation;
+export default updateEmployee;
