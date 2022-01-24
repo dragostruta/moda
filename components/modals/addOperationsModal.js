@@ -126,7 +126,13 @@ const AddOperationsModal = ({
             />
           );
         })}
-        <OperationRow defaultValue={currentOperationId} lastOne={true} />
+        <OperationRow
+          defaultValue={currentOperationId}
+          lastOne={true}
+          time={currentOperation.fields?.time}
+          cost={currentOperation.fields?.cost}
+          total={currentOperation.fields?.total}
+        />
       </>
     );
   };
