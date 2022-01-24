@@ -8,25 +8,52 @@ const AddOperationsModal = ({
   currentEmployee,
   handleSelectCurrentEmployee,
 }) => {
+  //  Operations list data fetched from the databasae
   const { operationsData, isLoading, isError } = getOperationAll();
-  const [operationsList, setOperationsList] = useState([]);
+  // Component State Current Operation id
   const [currentOperationId, setCurrentOperationId] = useState("");
+  // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
-  const [currentEmployeeKey, setCurrentEmployeeKey] = useState("");
+  // Component State The list of operations for Current Employee ready to be sent
   const [operationsSelectedList, setOperationsSelectedList] = useState([]);
+  // Component State The current Operation selected
   const [currentOperation, setCurrentOperation] = useState("");
+  // Bool if set to true the data will be sent to the parent component
   const [dataReadyToBeSent, setDataReadyToBeSent] = useState(false);
 
+  const [operationList, setOperationList] = useState([]);
+
+  // At every change of the OperationsData value we sort it.
   useEffect(() => {
     if (operationsData) {
       operationsData.sort((a, b) => {
         return a.fields.id - b.fields.id;
       });
-      setOperationsList(operationsData);
+      setOperationList(operationsData);
+      console.log(operationsData);
     }
   }, [operationsData]);
 
-  const OperationRow = ({ defaultValue, lastOne, time, cost, total }) => {
+  // At the first render of the page we populate the table if the current employee
+  // has already some operations saved and reset the current operation
+  useEffect(() => {
+    setOperationsSelectedList(
+      currentEmployee.fields?.operationsSelectedList ?? []
+    );
+    setCurrentOperation("");
+    setCurrentOperationId("");
+    setOperationList(operationsData);
+  }, []);
+
+  // Component Operation Row
+  const OperationRow = ({
+    operationId,
+    lastOne,
+    time,
+    cost,
+    total,
+    multiply,
+  }) => {
     return (
       <tr>
         <td className="p-2 whitespace-nowrap w-24">
@@ -39,13 +66,13 @@ const AddOperationsModal = ({
                   onChange={(e) => {
                     handleSelectOperation(e.target.value);
                   }}
-                  value={defaultValue}
+                  value={operationId}
                 >
                   <option defaultValue value={""}>
                     Open this select menu
                   </option>
-                  {operationsList &&
-                    operationsList.map((item, key) => {
+                  {operationList &&
+                    operationList.map((item, key) => {
                       return (
                         <option key={key} value={item.id}>
                           {" "}
@@ -68,14 +95,18 @@ const AddOperationsModal = ({
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="font-medium text-teal-400 w-6 flex">
-            {defaultValue ? (
-              <input
-                className="border border-solid p-1 w-24 text-center focus:border-teal-400 focus:outline-none py-1.5"
-                type="text"
-                onChange={(e) => {
-                  handleSumTotal(+e.target.value);
-                }}
-              />
+            {operationId ? (
+              !multiply ? (
+                <input
+                  className="border border-solid p-1 w-24 text-center focus:border-teal-400 focus:outline-none py-1.5"
+                  type="text"
+                  onChange={(e) => {
+                    handleSumTotal(+e.target.value);
+                  }}
+                />
+              ) : (
+                multiply
+              )
             ) : (
               ""
             )}
@@ -104,14 +135,7 @@ const AddOperationsModal = ({
     );
   };
 
-  useEffect(() => {
-    state.finalObject.filter((item, key) => {
-      if (key === currentEmployee.id) {
-        setCurrentEmployeeKey(key);
-      }
-    });
-  }, []);
-
+  // Component Operation Table
   const OperationTable = () => {
     return (
       <>
@@ -119,24 +143,28 @@ const AddOperationsModal = ({
           return (
             <OperationRow
               key={key}
-              defaultValue={operationsSelectedList[key].id}
+              operationId={operationsSelectedList[key].id}
               time={operationsSelectedList[key].fields.time}
               cost={operationsSelectedList[key].fields.cost}
               total={operationsSelectedList[key].fields.total}
+              multiply={operationsSelectedList[key].fields.multiply}
             />
           );
         })}
         <OperationRow
-          defaultValue={currentOperationId}
+          operationId={currentOperationId}
           lastOne={true}
           time={currentOperation.fields?.time}
           cost={currentOperation.fields?.cost}
           total={currentOperation.fields?.total}
+          multiply={currentOperation.fields?.multiply}
         />
       </>
     );
   };
 
+  // When the data is ready to be sent we add a operations list to the currentEmployee and send it
+  // to the parent component
   useEffect(() => {
     if (dataReadyToBeSent) {
       const result = currentEmployee;
@@ -146,13 +174,15 @@ const AddOperationsModal = ({
     }
   }, [dataReadyToBeSent]);
 
-  const handleAddOperationRow = (value) => {
-    const operation = findOperationFromArray(value, operationsList);
+  // Adding a new row and saving the data from the previous row into a list
+  const handleAddOperationRow = (id) => {
+    const operation = findOperationFromArray(id, operationList);
     setOperationsSelectedList(operationsSelectedList.concat(operation));
     setCurrentOperationId("");
     setCurrentOperation("");
   };
 
+  // it Handles the save button and saves the last row data if the operation is selected
   const handleSaveButton = () => {
     if (currentOperation) {
       setOperationsSelectedList(
@@ -163,7 +193,8 @@ const AddOperationsModal = ({
   };
 
   const handleSelectOperation = (value) => {
-    const operation = findOperationFromArray(value, operationsList);
+    console.log(operationList)
+    const operation = findOperationFromArray(value, operationList);
     setCurrentOperationId(value);
     operation.fields.total = 0;
     setCurrentOperation(operation);
@@ -172,6 +203,7 @@ const AddOperationsModal = ({
   const handleSumTotal = (value) => {
     const operation = currentOperation;
     operation.fields.total = (value * currentOperation.fields.cost).toFixed(2);
+    operation.fields.multiply = value;
     setCurrentOperation(operation);
   };
 

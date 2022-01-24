@@ -8,31 +8,35 @@ import getEmployeesAll from "../../components/fetcher/getEmployeesAll";
 import { StoreContext } from "../../store/store-context";
 
 const Dashboard = () => {
+  // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
+  //Component State Bool Operation Modal Lever
   const [toggleOperationsModal, setToggleOperationsModal] = useState(false);
+  //Employee list data fetched from the database
   const { employeesData, isLoading, isError } = getEmployeesAll();
-  const [employeesList, setEmployeesList] = useState([]);
+  //Component State Current Selected Employee
   const [currentEmployee, setCurrentEmployee] = useState("");
 
+  // At every change of the employeesData value we sort it.
   useEffect(() => {
     if (employeesData) {
       employeesData.sort((a, b) => {
         return a.fields.id - b.fields.id;
       });
-      setEmployeesList(employeesData);
     }
   }, [employeesData]);
 
+  // At the first render of the component we stop the loading spinner
   useEffect(() => {
     toggleLoadingSpinner(false, dispatch);
   }, []);
 
+  // Handles the set in the state of the Current Employee
   const handleSelectCurrentEmployee = (value) => {
-    if (value) {
-      setCurrentEmployee(value);
-    }
+    setCurrentEmployee(value);
   };
 
+  // Handles the Bool Operation Modal
   const handleToggleAddOperationsModal = (value) => {
     setToggleOperationsModal(value);
   };
@@ -45,10 +49,12 @@ const Dashboard = () => {
       <SideBar />
       <ChartsContent
         handleToggleAddOperationsModal={handleToggleAddOperationsModal}
-        employeesList={employeesList}
+        employeesList={employeesData}
         handleSelectCurrentEmployee={handleSelectCurrentEmployee}
         currentEmployee={currentEmployee}
       />
+      {/* We check if the Bool Operation Modal is true, if so we display the modal.
+      Otherwise we do not display anything */}
       {toggleOperationsModal ? (
         <AddOperationsModal
           handleToggleAddOperationsModal={handleToggleAddOperationsModal}

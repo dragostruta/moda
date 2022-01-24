@@ -9,10 +9,15 @@ const ChartsContent = ({
   handleSelectCurrentEmployee,
   currentEmployee,
 }) => {
+  // Component State The id of the current empolyee selected.
   const [currentId, setCurrentId] = useState("");
+  // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
 
-  const EmployeeRow = ({ defaultValue, lastOne }) => {
+  // Component for an entire row
+  // employeeId - current employee id
+  // lastOne - bool if the row is the last one from the table
+  const EmployeeRow = ({ employeeId, lastOne }) => {
     return (
       <tr>
         <td className="p-5 whitespace-nowrap w-24">
@@ -25,7 +30,7 @@ const ChartsContent = ({
                   onChange={(e) => {
                     handleSelectEmployee(e.target.value);
                   }}
-                  value={defaultValue}
+                  value={employeeId}
                 >
                   <option defaultValue value={""}>
                     Open this select menu
@@ -35,7 +40,11 @@ const ChartsContent = ({
                       return (
                         <option key={key} value={item.id}>
                           {" "}
-                          {item.fields.FirstName + " " + item.fields.LastName}
+                          {item.fields.id +
+                            " - " +
+                            item.fields.FirstName +
+                            " " +
+                            item.fields.LastName}
                         </option>
                       );
                     })}
@@ -48,10 +57,13 @@ const ChartsContent = ({
           <div className="font-medium text-center">
             <div className="flex justify-center">
               <div className="mb-3 xl:w-96">
-                {defaultValue ? (
+                {employeeId ? (
                   <button
                     className="bg-teal-400 rounded p-2 text-white font-semibold"
                     onClick={() => {
+                      handleSelectCurrentEmployee(
+                        findEmployeeFromArray(employeeId, employeesList)
+                      );
                       handleToggleAddOperationsModal(true);
                     }}
                   >
@@ -75,7 +87,7 @@ const ChartsContent = ({
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="font-medium text-center">
-            {lastOne ? (
+            {lastOne && employeeId ? (
               <button
                 className="bg-teal-400 rounded font-semibold p-2 text-white"
                 onClick={() => {
@@ -93,36 +105,37 @@ const ChartsContent = ({
     );
   };
 
+  // Emplyee Table Component
   const EmployeeTable = () => {
     return (
       <>
         {state.finalObject.map((item, key) => {
           return (
-            <EmployeeRow key={key} defaultValue={state.finalObject[key].id} />
+            <EmployeeRow key={key} employeeId={state.finalObject[key].id} />
           );
         })}
-        <EmployeeRow defaultValue={currentId} lastOne={true} />
+        <EmployeeRow employeeId={currentId} lastOne={true} />
       </>
     );
   };
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
-  const handleAddEmployeeRow = (value) => {
-    if (value) {
+  // Saves the current Employee in the Context State and resets the current employee id
+  const handleAddEmployeeRow = (employeeObject) => {
+    if (employeeObject) {
       dispatch({
         type: ACTION_TYPES.SET_FINAL_OBJECT,
-        payload: { finalObject: state.finalObject.concat(value) },
+        payload: { finalObject: state.finalObject.concat(employeeObject) },
       });
     }
     setCurrentId("");
   };
 
-  const handleSelectEmployee = (value) => {
-    setCurrentId(value);
-    const employee = findEmployeeFromArray(value, employeesList);
+  // Once the Employee is selected from the list, on click the current employee id is set
+  // And searches for the employee after that id
+  // And sends to the parent component state the current employee in order to know
+  const handleSelectEmployee = (id) => {
+    setCurrentId(id);
+    const employee = findEmployeeFromArray(id, employeesList);
     handleSelectCurrentEmployee(employee);
   };
 
