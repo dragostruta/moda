@@ -17,7 +17,7 @@ const ChartsContent = ({
   // Component for an entire row
   // employeeId - current employee id
   // lastOne - bool if the row is the last one from the table
-  const EmployeeRow = ({ employeeId, lastOne }) => {
+  const EmployeeRow = ({ employeeId, lastOne, total }) => {
     return (
       <tr>
         <td className="p-5 whitespace-nowrap w-24">
@@ -80,10 +80,9 @@ const ChartsContent = ({
           <div className="text-center">00:00</div>
         </td>
         <td className="p-2 whitespace-nowrap">
-          <div className="text-center font-medium text-teal-400">0</div>
-        </td>
-        <td className="p-2 whitespace-nowrap">
-          <div className="font-medium text-center">0</div>
+          <div className="text-center font-medium text-teal-400">
+            {total ?? 0}
+          </div>
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="font-medium text-center">
@@ -105,13 +104,25 @@ const ChartsContent = ({
     );
   };
 
+  const calculateTotalPriceForEmplyee = (employee) => {
+    let sum = 0;
+    employee.fields.operationsSelectedList?.map((item, key) => {
+      sum += parseFloat(item.fields.total);
+    });
+    return sum;
+  };
+
   // Emplyee Table Component
   const EmployeeTable = () => {
     return (
       <>
         {state.finalObject.map((item, key) => {
           return (
-            <EmployeeRow key={key} employeeId={state.finalObject[key].id} />
+            <EmployeeRow
+              key={key}
+              employeeId={state.finalObject[key].id}
+              total={calculateTotalPriceForEmplyee(state.finalObject[key])}
+            />
           );
         })}
         <EmployeeRow employeeId={currentId} lastOne={true} />
@@ -166,11 +177,7 @@ const ChartsContent = ({
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Tarf</div>
                       </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">
-                          Manopera
-                        </div>
-                      </th>
+
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center"></div>
                       </th>

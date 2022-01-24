@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { findOperationFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
+const _ = require("lodash");
+
 import getOperationAll from "../fetcher/getOperationsAll";
 const AddOperationsModal = ({
   handleToggleAddOperationsModal,
@@ -29,8 +31,7 @@ const AddOperationsModal = ({
       operationsData.sort((a, b) => {
         return a.fields.id - b.fields.id;
       });
-      setOperationList(operationsData);
-      console.log(operationsData);
+      setOperationList(_.cloneDeep(operationsData));
     }
   }, [operationsData]);
 
@@ -42,7 +43,7 @@ const AddOperationsModal = ({
     );
     setCurrentOperation("");
     setCurrentOperationId("");
-    setOperationList(operationsData);
+    setOperationList(_.cloneDeep(operationsData));
   }, []);
 
   // Component Operation Row
@@ -193,7 +194,6 @@ const AddOperationsModal = ({
   };
 
   const handleSelectOperation = (value) => {
-    console.log(operationList)
     const operation = findOperationFromArray(value, operationList);
     setCurrentOperationId(value);
     operation.fields.total = 0;
