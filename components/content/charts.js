@@ -106,6 +106,10 @@ const ChartsContent = ({
     );
   };
 
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
+
   const handleAddEmployeeRow = (value) => {
     if (value) {
       dispatch({

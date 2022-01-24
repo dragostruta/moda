@@ -53,6 +53,7 @@ const Dashboard = () => {
         <AddOperationsModal
           handleToggleAddOperationsModal={handleToggleAddOperationsModal}
           currentEmployee={currentEmployee}
+          handleSelectCurrentEmployee={handleSelectCurrentEmployee}
         />
       ) : (
         ""

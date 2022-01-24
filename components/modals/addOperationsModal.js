@@ -6,14 +6,16 @@ import getOperationAll from "../fetcher/getOperationsAll";
 const AddOperationsModal = ({
   handleToggleAddOperationsModal,
   currentEmployee,
-  handleSelectOperationListForEmployee,
+  handleSelectCurrentEmployee,
 }) => {
   const { operationsData, isLoading, isError } = getOperationAll();
   const [operationsList, setOperationsList] = useState([]);
   const [currentOperationId, setCurrentOperationId] = useState("");
   const { dispatch, state } = useContext(StoreContext);
   const [currentEmployeeKey, setCurrentEmployeeKey] = useState("");
-  const [operationSelectedList, setOperationSelectedList] = useState([]);
+  const [operationsSelectedList, setOperationsSelectedList] = useState([]);
+  const [currentOperation, setCurrentOperation] = useState("");
+  const [dataReadyToBeSent, setDataReadyToBeSent] = useState(false);
 
   useEffect(() => {
     if (operationsData) {
@@ -71,7 +73,7 @@ const AddOperationsModal = ({
               <button
                 className="bg-teal-400 rounded font-semibold p-2 text-white"
                 onClick={() => {
-                  handleSelectOperation(currentOperationId);
+                  handleAddOperationRow(currentOperationId);
                 }}
               >
                 +
@@ -91,17 +93,16 @@ const AddOperationsModal = ({
         setCurrentEmployeeKey(key);
       }
     });
-    console.log(operationSelectedList);
   }, []);
 
   const OperationTable = () => {
     return (
       <>
-        {operationSelectedList.map((item, key) => {
+        {operationsSelectedList.map((item, key) => {
           return (
             <OperationRow
               key={key}
-              defaultValue={operationSelectedList[key].id}
+              defaultValue={operationsSelectedList[key].id}
             />
           );
         })}
@@ -110,15 +111,35 @@ const AddOperationsModal = ({
     );
   };
 
+  useEffect(() => {
+    if (dataReadyToBeSent) {
+      const result = currentEmployee;
+      result.fields.operationsSelectedList = operationsSelectedList;
+      handleSelectCurrentEmployee(result);
+      handleToggleAddOperationsModal(false);
+    }
+  }, [dataReadyToBeSent]);
+
+  const handleAddOperationRow = (value) => {
+    const operation = findOperationFromArray(value, operationsList);
+    setOperationsSelectedList(operationsSelectedList.concat(operation));
+    setCurrentOperationId("");
+    setCurrentOperation("");
+  };
+
   const handleSaveButton = () => {
-    handleToggleAddOperationsModal(false);
+    if (currentOperation) {
+      setOperationsSelectedList(
+        operationsSelectedList.concat(currentOperation)
+      );
+    }
+    setDataReadyToBeSent(true);
   };
 
   const handleSelectOperation = (value) => {
     const operation = findOperationFromArray(value, operationsList);
-    setOperationSelectedList(operationSelectedList.concat(operation));
-    setCurrentOperationId("");
-    console.log(operationSelectedList);
+    setCurrentOperationId(value);
+    setCurrentOperation(operation);
   };
 
   return (
