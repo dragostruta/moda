@@ -26,7 +26,7 @@ const AddOperationsModal = ({
     }
   }, [operationsData]);
 
-  const OperationRow = ({ defaultValue, lastOne }) => {
+  const OperationRow = ({ defaultValue, lastOne, time, cost, total }) => {
     return (
       <tr>
         <td className="p-2 whitespace-nowrap w-24">
@@ -34,7 +34,7 @@ const AddOperationsModal = ({
             <div className="flex justify-center">
               <div className="mb-3 xl:w-96">
                 <select
-                  className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-teal-400 focus:outline-none"
                   aria-label="Default select example"
                   onChange={(e) => {
                     handleSelectOperation(e.target.value);
@@ -59,13 +59,30 @@ const AddOperationsModal = ({
           </div>
         </td>
         <td className="p-2 whitespace-nowrap">
-          <div className="text-center">03:00</div>
+          <div className="text-center">{time ?? "00:00"}</div>
         </td>
         <td className="p-2 whitespace-nowrap">
-          <div className="text-center font-medium text-teal-400">2,890.66</div>
+          <div className="text-center font-medium text-teal-400">
+            {cost ?? 0}
+          </div>
         </td>
         <td className="p-2 whitespace-nowrap">
-          <div className="font-medium text-center">2,890.66</div>
+          <div className="font-medium text-teal-400 w-6 flex">
+            {defaultValue ? (
+              <input
+                className="border border-solid p-1 w-24 text-center focus:border-teal-400 focus:outline-none py-1.5"
+                type="text"
+                onChange={(e) => {
+                  handleSumTotal(+e.target.value);
+                }}
+              />
+            ) : (
+              ""
+            )}
+          </div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="font-medium text-center">{total ?? 0}</div>
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="font-medium text-center">
@@ -103,6 +120,9 @@ const AddOperationsModal = ({
             <OperationRow
               key={key}
               defaultValue={operationsSelectedList[key].id}
+              time={operationsSelectedList[key].fields.time}
+              cost={operationsSelectedList[key].fields.cost}
+              total={operationsSelectedList[key].fields.total}
             />
           );
         })}
@@ -139,6 +159,13 @@ const AddOperationsModal = ({
   const handleSelectOperation = (value) => {
     const operation = findOperationFromArray(value, operationsList);
     setCurrentOperationId(value);
+    operation.fields.total = 0;
+    setCurrentOperation(operation);
+  };
+
+  const handleSumTotal = (value) => {
+    const operation = currentOperation;
+    operation.fields.total = (value * currentOperation.fields.cost).toFixed(2);
     setCurrentOperation(operation);
   };
 
@@ -198,6 +225,9 @@ const AddOperationsModal = ({
                 </th>
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Tarf</div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-center">Buc.</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Manopera</div>
