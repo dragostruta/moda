@@ -10,12 +10,12 @@ const ChartsContent = ({
   handleSelectCurrentEmployee,
   currentEmployee,
   handlePreview,
+  handleAddEmployeeToFinalObject,
+  currentEmployeeId,
+  handleCurrentEmployeeId,
 }) => {
-  // Component State The id of the current empolyee selected.
-  const [currentId, setCurrentId] = useState("");
   // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
-  const ref = useRef();
 
   // Component for an entire row
   // employeeId - current employee id
@@ -93,7 +93,7 @@ const ChartsContent = ({
               <button
                 className="bg-teal-400 rounded font-semibold p-2 text-white"
                 onClick={() => {
-                  handleAddEmployeeRow(currentEmployee);
+                  handleAddEmployeeToFinalObject(currentEmployee);
                 }}
               >
                 +
@@ -112,7 +112,7 @@ const ChartsContent = ({
     employee.fields.operationsSelectedList?.map((item, key) => {
       sum += parseFloat(item.fields.total);
     });
-    return sum;
+    return sum.toFixed(2);
   };
 
   // Emplyee Table Component
@@ -128,28 +128,16 @@ const ChartsContent = ({
             />
           );
         })}
-        <EmployeeRow employeeId={currentId} lastOne={true} />
+        <EmployeeRow employeeId={currentEmployeeId} lastOne={true} />
       </>
     );
-  };
-
-  // Saves the current Employee in the Context State and resets the current employee id
-  const handleAddEmployeeRow = (employeeObject) => {
-    if (state.finalObject.find((item) => item.id === employeeObject.id)) {
-    } else {
-      dispatch({
-        type: ACTION_TYPES.SET_FINAL_OBJECT,
-        payload: { finalObject: state.finalObject.concat(employeeObject) },
-      });
-    }
-    setCurrentId("");
   };
 
   // Once the Employee is selected from the list, on click the current employee id is set
   // And searches for the employee after that id
   // And sends to the parent component state the current employee in order to know
   const handleSelectEmployee = (id) => {
-    setCurrentId(id);
+    handleCurrentEmployeeId(id);
     const employee = findEmployeeFromArray(id, employeesList);
     handleSelectCurrentEmployee(employee);
   };
@@ -164,7 +152,7 @@ const ChartsContent = ({
             </header>
             <div className="p-3">
               <div className="overflow-x-auto">
-                <table className="w-full table-auto" ref={ref}>
+                <table className="w-full table-auto">
                   <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                     <tr>
                       <th className="p-2 whitespace-nowrap ">
@@ -204,7 +192,8 @@ const ChartsContent = ({
       <div
         onClick={() => {
           handlePreview(true);
-          handleAddEmployeeRow(currentEmployee);
+          handleAddEmployeeToFinalObject(currentEmployee);
+          handleCurrentEmployeeId("");
         }}
         className="flex float-right font-semibold text-sm bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5"
       >

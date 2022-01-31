@@ -9,6 +9,8 @@ const AddOperationsModal = ({
   handleToggleAddOperationsModal,
   currentEmployee,
   handleSelectCurrentEmployee,
+  handleAddEmployeeToFinalObject,
+  handleCurrentEmployeeId,
 }) => {
   //  Operations list data fetched from the databasae
   const { operationsData, isLoading, isError } = getOperationAll();
@@ -38,9 +40,15 @@ const AddOperationsModal = ({
   // At the first render of the page we populate the table if the current employee
   // has already some operations saved and reset the current operation
   useEffect(() => {
-    setOperationsSelectedList(
-      currentEmployee.fields?.operationsSelectedList ?? []
-    );
+    if (
+      state.finalObject.length > 0 &&
+      state.finalObject?.find((item) => item.id === currentEmployee.id)
+    ) {
+      setOperationsSelectedList(
+        state.finalObject?.find((item) => item.id === currentEmployee.id).fields
+          ?.operationsSelectedList ?? []
+      );
+    }
     setCurrentOperation("");
     setCurrentOperationId("");
     setOperationList(_.cloneDeep(operationsData));
@@ -118,7 +126,7 @@ const AddOperationsModal = ({
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="font-medium text-center">
-            {lastOne ? (
+            {lastOne && currentOperationId ? (
               <button
                 className="bg-teal-400 rounded font-semibold p-2 text-white"
                 onClick={() => {
@@ -168,9 +176,11 @@ const AddOperationsModal = ({
   // to the parent component
   useEffect(() => {
     if (dataReadyToBeSent) {
-      const result = currentEmployee;
+      const result = _.cloneDeep(currentEmployee);
       result.fields.operationsSelectedList = operationsSelectedList;
-      handleSelectCurrentEmployee(result);
+      handleAddEmployeeToFinalObject(result);
+      handleSelectCurrentEmployee("");
+      handleCurrentEmployeeId("");
       handleToggleAddOperationsModal(false);
     }
   }, [dataReadyToBeSent]);
@@ -181,6 +191,12 @@ const AddOperationsModal = ({
     setOperationsSelectedList(operationsSelectedList.concat(operation));
     setCurrentOperationId("");
     setCurrentOperation("");
+  };
+
+  const handleCloseButton = () => {
+    handleSelectCurrentEmployee("");
+    handleCurrentEmployeeId("");
+    handleToggleAddOperationsModal(false);
   };
 
   // it Handles the save button and saves the last row data if the operation is selected
@@ -194,10 +210,12 @@ const AddOperationsModal = ({
   };
 
   const handleSelectOperation = (value) => {
-    const operation = findOperationFromArray(value, operationList);
-    setCurrentOperationId(value);
-    operation.fields.total = 0;
-    setCurrentOperation(operation);
+    if (!operationsSelectedList.find((item) => item.id === value)) {
+      const operation = findOperationFromArray(value, operationList);
+      setCurrentOperationId(value);
+      operation.fields.total = 0;
+      setCurrentOperation(operation);
+    }
   };
 
   const handleSumTotal = (value) => {
@@ -213,7 +231,7 @@ const AddOperationsModal = ({
       data-close={true}
       onClick={(event) => {
         if (event.target.getAttribute("data-close")) {
-          handleToggleAddOperationsModal(false);
+          handleCloseButton(false);
         }
       }}
     >
@@ -235,7 +253,7 @@ const AddOperationsModal = ({
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
               data-modal-toggle="authentication-modal"
               onClick={() => {
-                handleToggleAddOperationsModal(false);
+                handleCloseButton(false);
               }}
             >
               <svg

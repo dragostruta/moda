@@ -5,7 +5,7 @@ import SideBar from "../../components/nav/sidebar";
 import ChartsContent from "../../components/content/charts";
 import AddOperationsModal from "../../components/modals/addOperationsModal";
 import getEmployeesAll from "../../components/fetcher/getEmployeesAll";
-import { StoreContext } from "../../store/store-context";
+import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 import Preview from "../../components/content/preview";
 
 const Dashboard = () => {
@@ -19,6 +19,9 @@ const Dashboard = () => {
   const [currentEmployee, setCurrentEmployee] = useState("");
 
   const [preview, setPreview] = useState(false);
+
+  // Component State The id of the current empolyee selected.
+  const [currentEmployeeId, setCurrentEmployeeId] = useState("");
 
   // At every change of the employeesData value we sort it.
   useEffect(() => {
@@ -48,6 +51,35 @@ const Dashboard = () => {
     setPreview(value);
   };
 
+  const handleCurrentEmployeeId = (value) => {
+    setCurrentEmployeeId(value);
+  };
+
+  // Saves the current Employee in the Context State and resets the current employee id
+  const handleAddEmployeeToFinalObject = (employeeObject) => {
+    if (state.finalObject.find((item) => item.id === employeeObject.id)) {
+      let stateClone = _.cloneDeep(state);
+      let trueIndex = null;
+      stateClone.finalObject.map((item, index) => {
+        if (item.id === employeeObject.id) {
+          trueIndex = index;
+        }
+      });
+      stateClone.finalObject[trueIndex] = employeeObject;
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_OBJECT,
+        payload: { finalObject: stateClone.finalObject },
+      });
+    } else {
+      if (employeeObject) {
+        dispatch({
+          type: ACTION_TYPES.SET_FINAL_OBJECT,
+          payload: { finalObject: state.finalObject.concat(employeeObject) },
+        });
+      }
+    }
+  };
+
   return (
     <div className="relative min-h-screen md:flex bg-gray-100 pt-20">
       <section>
@@ -63,6 +95,9 @@ const Dashboard = () => {
           handleSelectCurrentEmployee={handleSelectCurrentEmployee}
           currentEmployee={currentEmployee}
           handlePreview={handlePreview}
+          handleAddEmployeeToFinalObject={handleAddEmployeeToFinalObject}
+          currentEmployeeId={currentEmployeeId}
+          handleCurrentEmployeeId={handleCurrentEmployeeId}
         />
       )}
       {/* We check if the Bool Operation Modal is true, if so we display the modal.
@@ -72,6 +107,8 @@ const Dashboard = () => {
           handleToggleAddOperationsModal={handleToggleAddOperationsModal}
           currentEmployee={currentEmployee}
           handleSelectCurrentEmployee={handleSelectCurrentEmployee}
+          handleAddEmployeeToFinalObject={handleAddEmployeeToFinalObject}
+          handleCurrentEmployeeId={handleCurrentEmployeeId}
         />
       ) : (
         ""

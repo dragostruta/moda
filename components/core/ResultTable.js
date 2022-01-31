@@ -3,7 +3,6 @@ import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
 const ResultTable = () => {
   const { dispatch, state } = useContext(StoreContext);
-  console.log(state);
 
   const calculateSum = (array) => {
     let sum = 0;
@@ -12,7 +11,7 @@ const ResultTable = () => {
       sum = sum + parseFloat(item.fields.total);
     });
 
-    return sum;
+    return sum.toFixed(2);
   };
 
   return (
