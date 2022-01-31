@@ -108,7 +108,7 @@ const AddOperationsModal = ({
               !multiply ? (
                 <input
                   className="border border-solid p-1 w-24 text-center focus:border-teal-400 focus:outline-none py-1.5"
-                  type="text"
+                  type="number"
                   onChange={(e) => {
                     handleSumTotal(+e.target.value);
                   }}
@@ -126,14 +126,23 @@ const AddOperationsModal = ({
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="font-medium text-center">
-            {lastOne && currentOperationId ? (
+            {lastOne && operationId ? (
               <button
                 className="bg-teal-400 rounded font-semibold p-2 text-white"
                 onClick={() => {
-                  handleAddOperationRow(currentOperationId);
+                  handleAddOperationRow(operationId);
                 }}
               >
                 +
+              </button>
+            ) : !lastOne ? (
+              <button
+                className="bg-red-400 rounded text-md p-2 text-white"
+                onClick={() => {
+                  handleDelete(operationId);
+                }}
+              >
+                -
               </button>
             ) : (
               ""
@@ -194,8 +203,8 @@ const AddOperationsModal = ({
   };
 
   const handleCloseButton = () => {
-    handleSelectCurrentEmployee("");
-    handleCurrentEmployeeId("");
+    // handleSelectCurrentEmployee("");
+    // handleCurrentEmployeeId("");
     handleToggleAddOperationsModal(false);
   };
 
@@ -207,6 +216,28 @@ const AddOperationsModal = ({
       );
     }
     setDataReadyToBeSent(true);
+  };
+
+  useEffect(() => {
+    console.log(operationsSelectedList);
+  }, [operationsSelectedList]);
+
+  const handleDelete = (id) => {
+    if (operationsSelectedList.find((item) => item.id === id)) {
+      let filteredArray = operationsSelectedList.filter(
+        (item) => item.id !== id
+      );
+      operationList.map((item) => {
+        if (item.id === id) {
+          delete item.fields.multiply;
+        }
+      });
+      console.log(filteredArray);
+
+      setOperationsSelectedList(filteredArray);
+      setCurrentOperation("");
+      setCurrentOperationId("");
+    }
   };
 
   const handleSelectOperation = (value) => {

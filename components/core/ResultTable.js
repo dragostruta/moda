@@ -7,7 +7,7 @@ const ResultTable = () => {
   const calculateSum = (array) => {
     let sum = 0;
 
-    array.map((item, index) => {
+    array?.map((item, index) => {
       sum = sum + parseFloat(item.fields.total);
     });
 
@@ -79,7 +79,7 @@ const ResultTable = () => {
                     </tr>
                   </thead>
                   <tbody className="text-sm divide-y divide-gray-100">
-                    {item.fields.operationsSelectedList.map(
+                    {item.fields.operationsSelectedList?.map(
                       (subItem, subIndex) => {
                         return (
                           <tr key={subIndex} className="border-b">

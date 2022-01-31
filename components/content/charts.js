@@ -91,12 +91,21 @@ const ChartsContent = ({
           <div className="font-medium text-center">
             {lastOne && employeeId ? (
               <button
-                className="bg-teal-400 rounded font-semibold p-2 text-white"
+                className="bg-teal-400 rounded text-md p-2 text-white"
                 onClick={() => {
                   handleAddEmployeeToFinalObject(currentEmployee);
                 }}
               >
                 +
+              </button>
+            ) : !lastOne ? (
+              <button
+                className="bg-red-400 rounded text-md p-2 text-white"
+                onClick={() => {
+                  handleDelete(employeeId);
+                }}
+              >
+                -
               </button>
             ) : (
               ""
@@ -133,13 +142,27 @@ const ChartsContent = ({
     );
   };
 
+  const handleDelete = (id) => {
+    if (state.finalObject.find((item) => item.id === id)) {
+      let filteredArray = state.finalObject.filter((item) => item.id !== id);
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_OBJECT,
+        payload: { finalObject: filteredArray },
+      });
+    }
+    handleSelectCurrentEmployee("");
+    handleCurrentEmployeeId("");
+  };
+
   // Once the Employee is selected from the list, on click the current employee id is set
   // And searches for the employee after that id
   // And sends to the parent component state the current employee in order to know
   const handleSelectEmployee = (id) => {
-    handleCurrentEmployeeId(id);
-    const employee = findEmployeeFromArray(id, employeesList);
-    handleSelectCurrentEmployee(employee);
+    if (!state.finalObject.find((item) => item.id === id)) {
+      handleCurrentEmployeeId(id);
+      const employee = findEmployeeFromArray(id, employeesList);
+      handleSelectCurrentEmployee(employee);
+    }
   };
 
   return (

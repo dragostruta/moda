@@ -77,6 +77,8 @@ const Dashboard = () => {
           payload: { finalObject: state.finalObject.concat(employeeObject) },
         });
       }
+      handleSelectCurrentEmployee("");
+      handleCurrentEmployeeId("");
     }
   };
 
