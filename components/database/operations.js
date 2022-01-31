@@ -9,7 +9,7 @@ import {
 
 const table = base("operations");
 
-export const findOperaionById = async (id) => {
+export const findOperationById = async (id) => {
   return await findById(id, table);
 };
 

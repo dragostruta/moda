@@ -5,7 +5,7 @@ import {
 
 const createOperation = async (req, res) => {
   if (req.method === "POST") {
-    const { id, Name } = req.body;
+    const { id, Name, time, cost } = req.body;
 
     try {
       if (id) {
@@ -16,7 +16,12 @@ const createOperation = async (req, res) => {
           res.status(200);
         } else {
           if (Name) {
-            const records = await createOperationByFields({ id, Name });
+            const records = await createOperationByFields({
+              id,
+              Name,
+              time,
+              cost,
+            });
             res.json(records);
           } else {
             res.json({ message: "name is missing" });
@@ -28,7 +33,7 @@ const createOperation = async (req, res) => {
         res.status(400);
       }
     } catch (err) {
-      console.error("Error creating or finding operation");
+      console.error(err.message);
       res.status(500);
       res.json({ message: "Error creating or finding operation", err });
     }
