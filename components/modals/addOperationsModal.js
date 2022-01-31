@@ -218,10 +218,6 @@ const AddOperationsModal = ({
     setDataReadyToBeSent(true);
   };
 
-  useEffect(() => {
-    console.log(operationsSelectedList);
-  }, [operationsSelectedList]);
-
   const handleDelete = (id) => {
     if (operationsSelectedList.find((item) => item.id === id)) {
       let filteredArray = operationsSelectedList.filter(
@@ -232,7 +228,6 @@ const AddOperationsModal = ({
           delete item.fields.multiply;
         }
       });
-      console.log(filteredArray);
 
       setOperationsSelectedList(filteredArray);
       setCurrentOperation("");
