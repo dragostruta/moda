@@ -6,6 +6,7 @@ import ChartsContent from "../../components/content/charts";
 import AddOperationsModal from "../../components/modals/addOperationsModal";
 import getEmployeesAll from "../../components/fetcher/getEmployeesAll";
 import { StoreContext } from "../../store/store-context";
+import Preview from "../../components/content/preview";
 
 const Dashboard = () => {
   // Context State initialization
@@ -16,6 +17,8 @@ const Dashboard = () => {
   const { employeesData, isLoading, isError } = getEmployeesAll();
   //Component State Current Selected Employee
   const [currentEmployee, setCurrentEmployee] = useState("");
+
+  const [preview, setPreview] = useState(false);
 
   // At every change of the employeesData value we sort it.
   useEffect(() => {
@@ -41,18 +44,27 @@ const Dashboard = () => {
     setToggleOperationsModal(value);
   };
 
+  const handlePreview = (value) => {
+    setPreview(value);
+  };
+
   return (
     <div className="relative min-h-screen md:flex bg-gray-100 pt-20">
       <section>
         <NavBar />
       </section>
       <SideBar />
-      <ChartsContent
-        handleToggleAddOperationsModal={handleToggleAddOperationsModal}
-        employeesList={employeesData}
-        handleSelectCurrentEmployee={handleSelectCurrentEmployee}
-        currentEmployee={currentEmployee}
-      />
+      {preview ? (
+        <Preview handlePreview={handlePreview} />
+      ) : (
+        <ChartsContent
+          handleToggleAddOperationsModal={handleToggleAddOperationsModal}
+          employeesList={employeesData}
+          handleSelectCurrentEmployee={handleSelectCurrentEmployee}
+          currentEmployee={currentEmployee}
+          handlePreview={handlePreview}
+        />
+      )}
       {/* We check if the Bool Operation Modal is true, if so we display the modal.
       Otherwise we do not display anything */}
       {toggleOperationsModal ? (

@@ -12,6 +12,8 @@
     "@heroicons/react": "^1.0.5",
     "airtable": "^0.11.1",
     "classnames": "^2.2.6",
+    "html-to-image": "^1.9.0",
+    "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "magic-sdk": "^7.0.0",
     "next": "12.0.7",
@@ -19,6 +21,7 @@
     "react-dom": "17.0.2",
     "react-google-charts": "^3.0.15",
     "react-paginate": "^8.1.0",
+    "react-to-print": "^2.14.4",
     "swr": "^1.1.2",
     "validator": "^13.7.0"
   },

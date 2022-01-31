@@ -1,5 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useState } from "react/cjs/react.development";
+import GeneratePDF from "../../lib/GeneratePDF";
 import { findEmployeeFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
@@ -8,11 +9,13 @@ const ChartsContent = ({
   employeesList,
   handleSelectCurrentEmployee,
   currentEmployee,
+  handlePreview,
 }) => {
   // Component State The id of the current empolyee selected.
   const [currentId, setCurrentId] = useState("");
   // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
+  const ref = useRef();
 
   // Component for an entire row
   // employeeId - current employee id
@@ -132,7 +135,8 @@ const ChartsContent = ({
 
   // Saves the current Employee in the Context State and resets the current employee id
   const handleAddEmployeeRow = (employeeObject) => {
-    if (employeeObject) {
+    if (state.finalObject.find((item) => item.id === employeeObject.id)) {
+    } else {
       dispatch({
         type: ACTION_TYPES.SET_FINAL_OBJECT,
         payload: { finalObject: state.finalObject.concat(employeeObject) },
@@ -160,7 +164,7 @@ const ChartsContent = ({
             </header>
             <div className="p-3">
               <div className="overflow-x-auto">
-                <table className="w-full table-auto">
+                <table className="w-full table-auto" ref={ref}>
                   <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                     <tr>
                       <th className="p-2 whitespace-nowrap ">
@@ -197,8 +201,14 @@ const ChartsContent = ({
           </div>
         </div>
       </section>
-      <div className="flex float-right font-semibold text-sm bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5">
-        Next
+      <div
+        onClick={() => {
+          handlePreview(true);
+          handleAddEmployeeRow(currentEmployee);
+        }}
+        className="flex float-right font-semibold text-sm bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5"
+      >
+        Inainte
       </div>
     </div>
   );
