@@ -27,7 +27,7 @@ const LoginModal = ({ handleToggleLoginModal }) => {
             type: ACTION_TYPES.SET_LOGGED_USER,
             payload: { loggedUser: await getMetaData() },
           });
-          router.push("/dashboard");
+          router.push("/charts");
         }
       } catch {
         console.error("Something went wrong");

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { findOperationFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
+import GetOperationAll from "../fetcher/getOperationsAll";
 
 const _ = require("lodash");
 
-import GetOperationAll from "../fetcher/getOperationsAll";
 const AddOperationsModal = ({
   handleToggleAddOperationsModal,
   currentEmployee,
