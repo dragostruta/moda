@@ -204,11 +204,6 @@ const ChartsContent = ({
                 </table>
               </div>
             </div>
-            <footer className="px-5 py-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-800 ">
-                <div className="font-medium text-center">Total: 0 Lei</div>
-              </h2>
-            </footer>
           </div>
         </div>
       </section>
