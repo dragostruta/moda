@@ -20,7 +20,7 @@ const ChartsContent = ({
   // Component for an entire row
   // employeeId - current employee id
   // lastOne - bool if the row is the last one from the table
-  const EmployeeRow = ({ employeeId, lastOne, total }) => {
+  const EmployeeRow = ({ employeeId, lastOne, total, time }) => {
     return (
       <tr>
         <td className="p-5 whitespace-nowrap w-24">
@@ -80,7 +80,7 @@ const ChartsContent = ({
           </div>
         </td>
         <td className="p-2 whitespace-nowrap">
-          <div className="text-center">00:00</div>
+          <div className="text-center">{time ?? 0}</div>
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="text-center font-medium text-teal-400">
@@ -124,6 +124,14 @@ const ChartsContent = ({
     return sum.toFixed(2);
   };
 
+  const calculateTotalTime = (employee) => {
+    let totalTimeForEmployee = 0;
+    employee.fields.operationsSelectedList?.map((item, key) => {
+      totalTimeForEmployee += parseFloat(item.fields.time);
+    });
+    return totalTimeForEmployee.toFixed(2);
+  };
+
   // Emplyee Table Component
   const EmployeeTable = () => {
     return (
@@ -134,6 +142,7 @@ const ChartsContent = ({
               key={key}
               employeeId={state.finalObject[key].id}
               total={calculateTotalPriceForEmplyee(state.finalObject[key])}
+              time={calculateTotalTime(state.finalObject[key])}
             />
           );
         })}
@@ -192,7 +201,6 @@ const ChartsContent = ({
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Tarif</div>
                       </th>
-
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center"></div>
                       </th>

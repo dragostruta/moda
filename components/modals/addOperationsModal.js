@@ -247,6 +247,7 @@ const AddOperationsModal = ({
   const handleSumTotal = (value) => {
     const operation = currentOperation;
     operation.fields.total = (value * currentOperation.fields.cost).toFixed(2);
+    operation.fields.time = (value * currentOperation.fields.time).toFixed(2);
     operation.fields.multiply = value;
     setCurrentOperation(operation);
   };
