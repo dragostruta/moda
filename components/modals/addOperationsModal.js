@@ -4,7 +4,7 @@ import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
 const _ = require("lodash");
 
-import getOperationAll from "../fetcher/getOperationsAll";
+import GetOperationAll from "../fetcher/getOperationsAll";
 const AddOperationsModal = ({
   handleToggleAddOperationsModal,
   currentEmployee,
@@ -13,7 +13,7 @@ const AddOperationsModal = ({
   handleCurrentEmployeeId,
 }) => {
   //  Operations list data fetched from the databasae
-  const { operationsData, isLoading, isError } = getOperationAll();
+  const { operationsData, isLoading, isError } = GetOperationAll();
   // Component State Current Operation id
   const [currentOperationId, setCurrentOperationId] = useState("");
   // Context State initialization

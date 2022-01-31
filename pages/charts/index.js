@@ -4,7 +4,7 @@ import { toggleLoadingSpinner } from "../../lib/utils";
 import SideBar from "../../components/nav/sidebar";
 import ChartsContent from "../../components/content/charts";
 import AddOperationsModal from "../../components/modals/addOperationsModal";
-import getEmployeesAll from "../../components/fetcher/getEmployeesAll";
+import GetEmployeesAll from "../../components/fetcher/getEmployeesAll";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 import Preview from "../../components/content/preview";
 
@@ -14,7 +14,7 @@ const Dashboard = () => {
   //Component State Bool Operation Modal Lever
   const [toggleOperationsModal, setToggleOperationsModal] = useState(false);
   //Employee list data fetched from the database
-  const { employeesData, isLoading, isError } = getEmployeesAll();
+  const { employeesData, isLoading, isError } = GetEmployeesAll();
   //Component State Current Selected Employee
   const [currentEmployee, setCurrentEmployee] = useState("");
 

@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-const getEmployeesAll = () => {
+const GetEmployeesAll = () => {
   const { data, error } = useSWR("/api/employees/getEmployeeAll", fetcher);
 
   return {
@@ -12,4 +12,4 @@ const getEmployeesAll = () => {
   };
 };
 
-export default getEmployeesAll;
+export default GetEmployeesAll;
