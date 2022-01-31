@@ -78,7 +78,7 @@ const AddOperationsModal = ({
                   value={operationId}
                 >
                   <option defaultValue value={""}>
-                    Open this select menu
+                    Alege operatiune
                   </option>
                   {operationList &&
                     operationList.map((item, key) => {
@@ -306,7 +306,7 @@ const AddOperationsModal = ({
                   <div className="font-semibold text-center">Timp</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-center">Tarf</div>
+                  <div className="font-semibold text-center">Tarif</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Buc.</div>

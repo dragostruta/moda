@@ -84,7 +84,7 @@ const Operations = () => {
                         <div className="font-semibold text-center">Timp</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Tarf</div>
+                        <div className="font-semibold text-center">Tarif</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">

@@ -36,7 +36,7 @@ const ChartsContent = ({
                   value={employeeId}
                 >
                   <option defaultValue value={""}>
-                    Open this select menu
+                    Alege angajat
                   </option>
                   {employeesList &&
                     employeesList.map((item, key) => {
@@ -190,7 +190,7 @@ const ChartsContent = ({
                         <div className="font-semibold text-center">Timp</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Tarf</div>
+                        <div className="font-semibold text-center">Tarif</div>
                       </th>
 
                       <th className="p-2 whitespace-nowrap">
