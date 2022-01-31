@@ -25,7 +25,7 @@ const SideBar = () => {
   }, []);
 
   return (
-    <div className="bg-white border-r font-semibold w-64 space-y-6 px-2 py-7 absolute left-0 transform -translate-x-full transition duration-200 ease-in-out md:relative md:translate-x-0">
+    <div className="text-xl bg-white border-r font-semibold w-64 space-y-6 px-2 py-7 absolute left-0 transform -translate-x-full transition duration-200 ease-in-out md:relative md:translate-x-0">
       <nav>
         <Link href="/operations">
           <a

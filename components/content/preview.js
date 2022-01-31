@@ -9,11 +9,11 @@ const Preview = ({ handlePreview }) => {
         <ResultTable />
         <div
           onClick={() => handlePreview(false)}
-          className="flex float-right font-semibold text-sm bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5"
+          className="flex float-right font-semibold text-xl bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5"
         >
           Inapoi
         </div>
-        <div className="flex float-right font-semibold text-sm bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5">
+        <div className="flex float-right font-semibold text-xl bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5">
           <GeneratePDF />
         </div>
       </section>

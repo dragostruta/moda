@@ -65,7 +65,7 @@ const NavBar = ({ handleToggleLoginModal }) => {
           <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:space-x-4">
             {loggedUser === "" ? (
               <div
-                className="flex items-center justify-center h-12 px-4 text-sm font-semibold text-center transition-colors duration-200 transform text-white rounded-md lg:h-10 bg-teal-400 hover:bg-teal-300 cursor-pointer"
+                className="flex items-center justify-center h-12 px-4 text-xl font-semibold text-center transition-colors duration-200 transform text-white rounded-md lg:h-10 bg-teal-400 hover:bg-teal-300 cursor-pointer"
                 onClick={() => {
                   handleToggleLoginModal(true);
                 }}
@@ -98,7 +98,7 @@ const NavBar = ({ handleToggleLoginModal }) => {
                           onClick={() => {
                             handleLogout();
                           }}
-                          className="hover:bg-gray-50 block px-4 py-2 text-sm font-semibold "
+                          className="hover:bg-gray-50 block px-4 py-2 text-xl font-semibold "
                         >
                           Sign out
                         </a>

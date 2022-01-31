@@ -24,11 +24,11 @@ const ResultTable = () => {
           >
             <div className="p-3 py-10">
               <div>
-                <div className="text-sm text-gray-400 p-2">
+                <div className="text-xl text-gray-400 p-2">
                   Castiguri individuale din norma
                 </div>
                 <table className="w-[100%]">
-                  <thead className="text-xs font-semibold uppercase text-gray-800">
+                  <thead className="text-xl font-semibold uppercase text-gray-800">
                     <tr>
                       <th className="p-2  ">
                         <div className="font-semibold text-center">
@@ -49,7 +49,7 @@ const ResultTable = () => {
                   </thead>
                 </table>
                 <table className="w-[100%] table-auto">
-                  <thead className="text-xs font-semibold uppercase text-gray-800 border-2 border-black">
+                  <thead className="text-xl font-semibold uppercase text-gray-800 border-2 border-black">
                     <tr>
                       <th className="p-2  ">
                         <div className="font-semibold text-center">Model</div>
@@ -78,7 +78,7 @@ const ResultTable = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="text-sm divide-y divide-gray-100">
+                  <tbody className="text-xl divide-y divide-gray-100">
                     {item.fields.operationsSelectedList?.map(
                       (subItem, subIndex) => {
                         return (

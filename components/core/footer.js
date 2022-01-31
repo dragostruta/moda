@@ -9,7 +9,7 @@ const Footer = () => {
           Moda <strong>SCM</strong>
         </p>
       </div>
-      <div className="text-sm grid grid-rows-1 grid-flow-col gap-10">
+      <div className="text-xl grid grid-rows-1 grid-flow-col gap-10">
         <div className="flex items-center justify-center hover:text-teal-500 cursor-pointer">
           Acasa
         </div>
@@ -23,7 +23,7 @@ const Footer = () => {
           Autentificare
         </div>
       </div>
-      <div className="text-xs flex items-center justify-center cursor-default">
+      <div className="text-xl flex items-center justify-center cursor-default">
         @2022 - Moda SCM. All rights reserved.
       </div>
     </div>

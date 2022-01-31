@@ -75,7 +75,7 @@ const Employees = () => {
             <div className="p-3">
               <div className="overflow-x-auto">
                 <table className="w-full table-auto">
-                  <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                  <thead className="font-semibold uppercase text-gray-400 bg-gray-50">
                     <tr>
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Nr.</div>
@@ -94,7 +94,7 @@ const Employees = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="text-sm divide-y divide-gray-100">
+                  <tbody className="text-xl divide-y divide-gray-100">
                     <Items currentItems={currentItems} />
                   </tbody>
                 </table>

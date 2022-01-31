@@ -70,7 +70,7 @@ const AddOperationsModal = ({
             <div className="flex justify-center">
               <div className="mb-3 xl:w-96">
                 <select
-                  className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-teal-400 focus:outline-none"
+                  className="text-xl form-select appearance-none block w-full px-3 py-1.5 font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-teal-400 focus:outline-none"
                   aria-label="Default select example"
                   onChange={(e) => {
                     handleSelectOperation(e.target.value);
@@ -315,7 +315,7 @@ const AddOperationsModal = ({
             </button>
           </div>
           <table className="w-full table-auto">
-            <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+            <thead className="text-xl font-semibold uppercase text-gray-400 bg-gray-50">
               <tr>
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Operatiune</div>
@@ -337,7 +337,7 @@ const AddOperationsModal = ({
                 </th>
               </tr>
             </thead>
-            <tbody className="text-sm divide-y divide-gray-100">
+            <tbody className="text-xl divide-y divide-gray-100">
               <OperationTable />
             </tbody>
           </table>
