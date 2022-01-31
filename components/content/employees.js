@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-const Items = ({ currentItems }) => {
+const Items = ({
+  currentItems,
+  handleSetToggleModalDelete,
+  handleToBeDeletedId,
+}) => {
   return (
     <>
       {currentItems &&
@@ -23,14 +27,25 @@ const Items = ({ currentItems }) => {
                 <div className="text-center"> {item.fields.LastName}</div>
               </td>
               <td className="p-2 whitespace-nowrap">
-                <div className="text-center font-medium text-teal-400">
-                  {item.fields.Phone}
-                </div>
-              </td>
-              <td className="p-2 whitespace-nowrap">
                 <div className="font-medium text-center">
-                  {" "}
-                  {item.fields.Address}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    onClick={() => {
+                      handleToBeDeletedId(item.fields.id);
+                      handleSetToggleModalDelete(true);
+                    }}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
                 </div>
               </td>
             </tr>
@@ -40,7 +55,11 @@ const Items = ({ currentItems }) => {
   );
 };
 
-const Employees = () => {
+const Employees = ({
+  handleSetToggleModalAdd,
+  handleSetToggleModalDelete,
+  handleToBeDeletedId,
+}) => {
   const { data, error } = useSWR("/api/employees/getEmployeeAll", fetcher);
   const [currentItems, setCurrentItems] = useState(null);
   const [pageCount, setPageCount] = useState(0);
@@ -69,8 +88,17 @@ const Employees = () => {
       <section className="antialiased px-4">
         <div className="flex flex-col justify-center h-full">
           <div className="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg border border-gray-200">
-            <header className="px-5 py-4 border-b border-gray-100">
+            <header className="px-5 py-4 border-b border-gray-100 flex">
               <h2 className="font-semibold text-gray-800">Angajati</h2>
+              <div className="flex-1"></div>
+              <button
+                onClick={() => {
+                  handleSetToggleModalAdd(true);
+                }}
+                className="font-semibold text-white bg-teal-400 rounded p-2 text-base hover:bg-teal-300"
+              >
+                Adauga
+              </button>
             </header>
             <div className="p-3">
               <div className="overflow-x-auto">
@@ -87,15 +115,16 @@ const Employees = () => {
                         <div className="font-semibold text-center">Nume</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Phone</div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Adresa</div>
+                        <div className="font-semibold text-center"></div>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="text-sm divide-y divide-gray-100">
-                    <Items currentItems={currentItems} />
+                    <Items
+                      currentItems={currentItems}
+                      handleSetToggleModalDelete={handleSetToggleModalDelete}
+                      handleToBeDeletedId={handleToBeDeletedId}
+                    />
                   </tbody>
                 </table>
               </div>

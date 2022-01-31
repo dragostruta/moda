@@ -5,7 +5,7 @@ import {
 
 const createEmployee = async (req, res) => {
   if (req.method === "POST") {
-    const { id, Name } = req.body;
+    const { id, FirstName, LastName } = req.body;
 
     try {
       if (id) {
@@ -15,11 +15,15 @@ const createEmployee = async (req, res) => {
           res.json(records);
           res.status(200);
         } else {
-          if (Name) {
-            const records = await createEmployeeByFields({ id, Name });
+          if (FirstName) {
+            const records = await createEmployeeByFields({
+              id,
+              FirstName,
+              LastName,
+            });
             res.json(records);
           } else {
-            res.json({ message: "name is missing" });
+            res.json({ message: "FirstName is missing" });
             res.status(400);
           }
         }

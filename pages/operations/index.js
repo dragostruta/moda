@@ -56,7 +56,7 @@ const ModalAdd = ({
                 htmlFor="id"
                 className="text-sm font-medium text-gray-900 block mb-2"
               >
-                Cod
+                Cod operatiune
               </label>
               <input
                 type="text"
