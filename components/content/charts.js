@@ -20,7 +20,7 @@ const ChartsContent = ({
   // Component for an entire row
   // employeeId - current employee id
   // lastOne - bool if the row is the last one from the table
-  const EmployeeRow = ({ employeeId, lastOne, total }) => {
+  const EmployeeRow = ({ employeeId, lastOne, total, totalTime }) => {
     return (
       <tr>
         <td className="p-5 whitespace-nowrap w-24">
@@ -80,7 +80,7 @@ const ChartsContent = ({
           </div>
         </td>
         <td className="p-2 whitespace-nowrap">
-          <div className="text-center">00:00</div>
+          <div className="text-center">{totalTime ?? "00:00"}</div>
         </td>
         <td className="p-2 whitespace-nowrap">
           <div className="text-center font-medium text-teal-400">
@@ -142,6 +142,25 @@ const ChartsContent = ({
     return sum.toFixed(2);
   };
 
+  const calculateTotalTimeForEmployee = (employee) => {
+    let minutes = 0;
+    let seconds = 0;
+    employee.fields.operationsSelectedList?.map((item, key) => {
+      let time = item.fields.time.split(":");
+      minutes +=
+        parseInt(time[0]) * item.fields.multiply +
+        (parseInt(time[1]) > 0
+          ? Math.floor((parseInt(time[1]) * item.fields.multiply) / 60)
+          : parseInt(time[1]));
+      seconds += (parseInt(time[1]) * item.fields.multiply) % 60;
+    });
+    return (
+      (minutes < 10 ? "0" + minutes : minutes) +
+      ":" +
+      (seconds < 10 ? "0" + seconds : seconds)
+    );
+  };
+
   // Emplyee Table Component
   const EmployeeTable = () => {
     return (
@@ -152,6 +171,7 @@ const ChartsContent = ({
               key={key}
               employeeId={state.finalObject[key].id}
               total={calculateTotalPriceForEmplyee(state.finalObject[key])}
+              totalTime={calculateTotalTimeForEmployee(state.finalObject[key])}
             />
           );
         })}
