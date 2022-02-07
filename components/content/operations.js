@@ -24,6 +24,14 @@ const Items = ({
                 </div>
               </td>
               <td className="p-2 whitespace-nowrap">
+                <div className="text-center">{item.fields.category}</div>
+              </td>
+              <td className="p-2 whitespace-nowrap">
+                <div className="text-center font-medium text-teal-400">
+                  {item.fields.priceHour}
+                </div>
+              </td>
+              <td className="p-2 whitespace-nowrap">
                 <div className="text-center">{item.fields.time}</div>
               </td>
               <td className="p-2 whitespace-nowrap">
@@ -114,8 +122,16 @@ const Operations = ({
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Nr.</div>
                       </th>
-                      <th className="p-2 whitespace-nowrap">
+                      <th className="p-2 whitespace-nowrap w-[20%]">
                         <div className="font-semibold text-center">Nume</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap w-[20%]">
+                        <div className="font-semibold text-center">
+                          Categorie lucrari
+                        </div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="font-semibold text-center">Lei/Ora</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Timp</div>

@@ -5,7 +5,7 @@ import {
 
 const createOperation = async (req, res) => {
   if (req.method === "POST") {
-    const { id, Name, time, cost } = req.body;
+    const { id, Name } = req.body;
 
     try {
       if (id) {
@@ -16,12 +16,7 @@ const createOperation = async (req, res) => {
           res.status(200);
         } else {
           if (Name) {
-            const records = await createOperationByFields({
-              id,
-              Name,
-              time,
-              cost,
-            });
+            const records = await createOperationByFields(req.body);
             res.json(records);
           } else {
             res.json({ message: "name is missing" });

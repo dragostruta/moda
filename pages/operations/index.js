@@ -95,6 +95,48 @@ const ModalAdd = ({
             </div>
             <div>
               <label
+                htmlFor="name"
+                className="text-sm font-medium text-gray-900 block mb-2"
+              >
+                Categorie
+              </label>
+              <input
+                type="text"
+                name="category"
+                id="category"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-400 focus:border-teal-400 block w-full p-2.5"
+                placeholder="1"
+                required
+                value={formValue.category}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+              <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
+            </div>
+            <div>
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-gray-900 block mb-2"
+              >
+                Lei/Ora
+              </label>
+              <input
+                type="text"
+                name="priceHour"
+                id="priceHour"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-400 focus:border-teal-400 block w-full p-2.5"
+                placeholder="0.67"
+                required
+                value={formValue.priceHour}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+              <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
+            </div>
+            <div>
+              <label
                 htmlFor="time"
                 className="text-sm font-medium text-gray-900 block mb-2"
               >
@@ -245,6 +287,8 @@ const Dashboard = () => {
   const [formValue, setFormValue] = useState({
     id: "",
     name: "",
+    category: "",
+    priceHour: "",
     time: "",
     cost: "",
   });
@@ -274,6 +318,8 @@ const Dashboard = () => {
       body: JSON.stringify({
         id: formValue.id,
         Name: formValue.name,
+        category: formValue.category,
+        priceHour: formValue.priceHour,
         time: formValue.time,
         cost: formValue.cost,
       }),

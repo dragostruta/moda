@@ -62,6 +62,8 @@ const AddOperationsModal = ({
     cost,
     total,
     multiply,
+    category,
+    priceHour,
   }) => {
     return (
       <tr>
@@ -92,6 +94,14 @@ const AddOperationsModal = ({
                 </select>
               </div>
             </div>
+          </div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-center">{category ?? ""}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-center font-medium text-teal-400">
+            {priceHour ?? 0}
           </div>
         </td>
         <td className="p-2 whitespace-nowrap">
@@ -182,6 +192,8 @@ const AddOperationsModal = ({
               operationId={operationsSelectedList[key].id}
               time={operationsSelectedList[key].fields.time}
               cost={operationsSelectedList[key].fields.cost}
+              category={operationsSelectedList[key].fields.category}
+              priceHour={operationsSelectedList[key].fields.priceHour}
               total={operationsSelectedList[key].fields.total}
               multiply={operationsSelectedList[key].fields.multiply}
             />
@@ -192,6 +204,8 @@ const AddOperationsModal = ({
           lastOne={true}
           time={currentOperation.fields?.time}
           cost={currentOperation.fields?.cost}
+          category={currentOperation.fields?.category}
+          priceHour={currentOperation.fields?.priceHour}
           total={currentOperation.fields?.total}
           multiply={currentOperation.fields?.multiply}
         />
@@ -321,8 +335,17 @@ const AddOperationsModal = ({
                   <div className="font-semibold text-center">Operatiune</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-center">
+                    Categorie lucrari
+                  </div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-center">Lei/Ora</div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Timp</div>
                 </th>
+
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Tarif</div>
                 </th>
