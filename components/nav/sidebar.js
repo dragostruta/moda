@@ -18,6 +18,9 @@ const SideBar = () => {
       case "/charts":
         setBtnColored("charts");
         break;
+      case "/model":
+        setBtnColored("model");
+        break;
       default:
         setBtnColored("");
         break;
@@ -39,6 +42,22 @@ const SideBar = () => {
                 <BookIcon />
               </div>
               <span>Operatiuni</span>
+            </div>
+          </a>
+        </Link>
+        <div className="border-t border-solid border-gray-200" />
+        <Link href="/model">
+          <a
+            className={
+              (btnColored === "model" ? "text-teal-300 " : "") +
+              "block py-2.5 px-6 transition duration-200 hover:text-teal-300 cursor-pointer"
+            }
+          >
+            <div className="flex">
+              <div className="pr-2">
+                <BookIcon />
+              </div>
+              <span>Model</span>
             </div>
           </a>
         </Link>
