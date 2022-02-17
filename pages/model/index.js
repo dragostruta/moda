@@ -6,6 +6,48 @@ import SideBar from "../../components/nav/sidebar";
 import Model from "../../components/content/model";
 import { mutate } from "swr";
 
+const ModalAddOperation = ({ handleSetToggleModalAddOperation }) => {
+  return (
+    <div
+      className="bg-black bg-opacity-50 absolute inset-0 z-40 flex justify-center items-center"
+      data-close={true}
+      onClick={(event) => {
+        if (event.target.getAttribute("data-close")) {
+          handleSetToggleModalAddOperation(false);
+        }
+      }}
+    >
+      <div className="p-10 text-2xl font-bold w-[25%] ">
+        <div className="bg-white rounded-lg shadow relative p-3">
+          <div className="flex justify-end p-2">
+            <button
+              type="button"
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+              data-modal-toggle="authentication-modal"
+              onClick={() => {
+                handleSetToggleModalAddOperation(false);
+              }}
+            >
+              <svg
+                className="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ModalAdd = ({
   handleSetToggleModalAdd,
   handleChange,
@@ -49,14 +91,14 @@ const ModalAdd = ({
           </div>
           <form className="space-y-6 px-6 lg:px-8 pb-4 sm:pb-6 xl:pb-8">
             <h3 className="text-xl font-medium text-gray-900">
-              Adaugare angajat
+              Adaugare model
             </h3>
             <div>
               <label
                 htmlFor="id"
                 className="text-sm font-medium text-gray-900 block mb-2"
               >
-                Cod angajat
+                Cod model
               </label>
               <input
                 type="text"
@@ -81,31 +123,11 @@ const ModalAdd = ({
               </label>
               <input
                 type="text"
-                name="firstName"
-                id="firstName"
+                name="name"
+                id="name"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-400 focus:border-teal-400 block w-full p-2.5"
                 required
-                value={formValue.firstName}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-              <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
-            </div>
-            <div>
-              <label
-                htmlFor="lastName"
-                className="text-sm font-medium text-gray-900 block mb-2"
-              >
-                Prenume
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-400 focus:border-teal-400 block w-full p-2.5"
-                required
-                value={formValue.lastName}
+                value={formValue.name}
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -134,7 +156,7 @@ const ModalDelete = ({
   toBeDeletedId,
 }) => {
   const handleDelete = (id) => {
-    fetch("/api/employees/deleteEmployee", {
+    fetch("/api/model/deleteModel", {
       method: "DELETE",
       mode: "cors",
       headers: {
@@ -148,7 +170,7 @@ const ModalDelete = ({
       .then((data) => {
         handleSetToggleModalDelete(false);
         handleToBeDeletedId("");
-        mutate("/api/employees/getEmployeeAll");
+        mutate("/api/model/getModelAll");
       });
   };
 
@@ -188,7 +210,7 @@ const ModalDelete = ({
             </button>
           </div>
           <div className="text-md p-3">
-            Esti sigur ca vrei sa stergi acesta operatiune?
+            Esti sigur ca vrei sa stergi acest model?
           </div>
           <div className="flex justify-evenly py-3">
             <button
@@ -218,11 +240,11 @@ const Dashboard = () => {
   const { dispatch } = useContext(StoreContext);
   const [toggleModalAdd, setToggleModalAdd] = useState(false);
   const [toggleModalDelete, setToggleModalDelete] = useState(false);
+  const [toggleModalAddOperation, setToggleModalAddOperation] = useState(false);
   const [toBeDeletedId, setToBeDeletedId] = useState("");
   const [formValue, setFormValue] = useState({
     id: "",
-    firstName: "",
-    lastName: "",
+    name: "",
   });
 
   const handleToBeDeletedId = (value) => {
@@ -241,7 +263,7 @@ const Dashboard = () => {
 
   const handleCreateObject = (e) => {
     e.preventDefault();
-    fetch("/api/employees/createEmployee", {
+    fetch("/api/model/createModel", {
       method: "POST",
       mode: "cors",
       headers: {
@@ -249,8 +271,7 @@ const Dashboard = () => {
       },
       body: JSON.stringify({
         id: formValue.id,
-        FirstName: formValue.firstName,
-        LastName: formValue.lastName,
+        name: formValue.name,
       }),
     })
       .then((response) => response.json())
@@ -258,15 +279,18 @@ const Dashboard = () => {
         handleSetToggleModalAdd(false);
         setFormValue({
           id: "",
-          firstName: "",
-          lastName: "",
+          name: "",
         });
-        mutate("/api/employees/getEmployeeAll");
+        mutate("/api/model/getModelAll");
       });
   };
 
   const handleSetToggleModalAdd = (value) => {
     setToggleModalAdd(value);
+  };
+
+  const handleSetToggleModalAddOperation = (value) => {
+    setToggleModalAddOperation(value);
   };
 
   const handleSetToggleModalDelete = (value) => {
@@ -283,6 +307,13 @@ const Dashboard = () => {
         <NavBar />
       </section>
       <SideBar />
+      {toggleModalAddOperation ? (
+        <ModalAddOperation
+          handleSetToggleModalAddOperation={handleSetToggleModalAddOperation}
+        />
+      ) : (
+        ""
+      )}
       {toggleModalAdd ? (
         <ModalAdd
           handleSetToggleModalAdd={handleSetToggleModalAdd}
@@ -305,6 +336,7 @@ const Dashboard = () => {
       <Model
         handleSetToggleModalAdd={handleSetToggleModalAdd}
         handleSetToggleModalDelete={handleSetToggleModalDelete}
+        handleSetToggleModalAddOperation={handleSetToggleModalAddOperation}
         handleToBeDeletedId={handleToBeDeletedId}
       />
     </div>

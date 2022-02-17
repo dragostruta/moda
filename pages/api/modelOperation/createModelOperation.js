@@ -5,7 +5,7 @@ import {
 
 const createModelOperation = async (req, res) => {
   if (req.method === "POST") {
-    const { id, model_id, operation_id } = req.body;
+    const { id, model_id, operation_id, count } = req.body;
 
     try {
       if (id) {
@@ -20,6 +20,7 @@ const createModelOperation = async (req, res) => {
               id,
               model_id: model_id,
               operation_id: operation_id,
+              count: count,
             });
             res.json(records);
           } else {

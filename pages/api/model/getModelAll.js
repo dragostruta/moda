@@ -1,17 +1,11 @@
-import { findModelAll } from "../../../components/database/employees";
+import { findModelAll } from "../../../components/database/model";
 
 const getModelAll = async (req, res) => {
   if (req.method === "GET") {
     try {
       const records = await findModelAll();
-
-      if (records.length !== 0) {
-        res.json(records);
-        res.status(200);
-      } else {
-        res.json({ message: "employee could not be found" });
-        res.status(400);
-      }
+      res.json(records);
+      res.status(200);
     } catch (err) {
       console.error("Error finding model");
       res.status(500);

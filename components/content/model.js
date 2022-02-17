@@ -8,6 +8,7 @@ const Items = ({
   currentItems,
   handleSetToggleModalDelete,
   handleToBeDeletedId,
+  handleSetToggleModalAddOperation,
 }) => {
   return (
     <>
@@ -18,13 +19,29 @@ const Items = ({
               <td className="p-2 whitespace-nowrap">
                 <div className="font-medium text-center">{item.fields.id}</div>
               </td>
-              <td className="p-5 whitespace-nowrap">
-                <div className="font-medium text-center">
-                  {item.fields.FirstName}
-                </div>
+              <td className="p-2 whitespace-nowrap">
+                <div className="text-center"> {item.fields.name}</div>
               </td>
               <td className="p-2 whitespace-nowrap">
-                <div className="text-center"> {item.fields.LastName}</div>
+                <div className="font-medium text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    onClick={() => {
+                      handleSetToggleModalAddOperation(true);
+                    }}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
               </td>
               <td className="p-2 whitespace-nowrap">
                 <div className="font-medium text-center">
@@ -48,6 +65,24 @@ const Items = ({
                   </svg>
                 </div>
               </td>
+              <td className="p-2 whitespace-nowrap">
+                <div className="font-medium text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                </div>
+              </td>
             </tr>
           );
         })}
@@ -59,8 +94,9 @@ const Model = ({
   handleSetToggleModalAdd,
   handleSetToggleModalDelete,
   handleToBeDeletedId,
+  handleSetToggleModalAddOperation,
 }) => {
-  const { data, error } = useSWR("/api/employees/getEmployeeAll", fetcher);
+  const { data, error } = useSWR("/api/model/getModelAll", fetcher);
   const [currentItems, setCurrentItems] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -109,10 +145,13 @@ const Model = ({
                         <div className="font-semibold text-center">Nr.</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Prenume</div>
+                        <div className="font-semibold text-center">Nume</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Nume</div>
+                        <div className="font-semibold text-center"></div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="font-semibold text-center"></div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center"></div>
@@ -125,6 +164,9 @@ const Model = ({
                         currentItems={currentItems}
                         handleSetToggleModalDelete={handleSetToggleModalDelete}
                         handleToBeDeletedId={handleToBeDeletedId}
+                        handleSetToggleModalAddOperation={
+                          handleSetToggleModalAddOperation
+                        }
                       />
                     ) : (
                       ""
