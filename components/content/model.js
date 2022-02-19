@@ -9,6 +9,7 @@ const Items = ({
   handleSetToggleModalDelete,
   handleToBeDeletedId,
   handleSetToggleModalAddOperation,
+  handleSetCurrentModelId,
 }) => {
   return (
     <>
@@ -31,6 +32,7 @@ const Items = ({
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     onClick={() => {
+                      handleSetCurrentModelId(item.fields.id);
                       handleSetToggleModalAddOperation(true);
                     }}
                   >
@@ -95,6 +97,7 @@ const Model = ({
   handleSetToggleModalDelete,
   handleToBeDeletedId,
   handleSetToggleModalAddOperation,
+  handleSetCurrentModelId,
 }) => {
   const { data, error } = useSWR("/api/model/getModelAll", fetcher);
   const [currentItems, setCurrentItems] = useState(null);
@@ -167,6 +170,7 @@ const Model = ({
                         handleSetToggleModalAddOperation={
                           handleSetToggleModalAddOperation
                         }
+                        handleSetCurrentModelId={handleSetCurrentModelId}
                       />
                     ) : (
                       ""
