@@ -173,7 +173,7 @@ const Model = ({
                         handleSetCurrentModelId={handleSetCurrentModelId}
                       />
                     ) : (
-                      ""
+                      <tr></tr>
                     )}
                   </tbody>
                 </table>

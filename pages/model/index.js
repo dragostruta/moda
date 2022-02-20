@@ -25,6 +25,7 @@ const OperationRow = ({
   handleSelectOperation,
   handleSumTotal,
   handleAddOperationRow,
+  handleDelete,
 }) => {
   return (
     <tr>
@@ -197,33 +198,68 @@ const ModalAddOperation = ({
   handleSetToggleModalAddOperation,
   currentModelId,
 }) => {
-  const { modelsOperationsData } = GetModelOperationAll();
+  //   const { modelsOperationsData } = GetModelOperationAll();
+  const [modelsOperationList, setModelsOperationList] = useState([]);
   const [currentModelObject, setCurrentModelObject] = useState("");
   const [operationsSelectedList, setOperationsSelectedList] = useState([]);
   const [currentOperation, setCurrentOperation] = useState("");
   const [currentOperationId, setCurrentOperationId] = useState("");
   const [operationList, setOperationList] = useState([]);
-  const { operationsData, isLoading, isError } = GetOperationAll();
+  //   const { operationsData, isLoading, isError } = GetOperationAll();
   const [dataReadyToBeSent, setDataReadyToBeSent] = useState(false);
 
-  useEffect(() => {
-    if (operationsData) {
-      operationsData.sort((a, b) => {
-        return a.fields.id - b.fields.id;
-      });
-      setOperationList(_.cloneDeep(operationsData));
-    }
-  }, [operationsData]);
+  const getModelOperationAllFunc = async () => {
+    const response = await fetch("/api/modelOperation/getModelOperationAll", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+
+    setModelsOperationList(data);
+  };
+
+  const getOperationAllFunc = async () => {
+    const response = await fetch("/api/operation/getOperationAll", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    setOperationList(data);
+  };
 
   useEffect(() => {
-    if (modelsOperationsData) {
-      modelsOperationsData.map((item, key) => {
-        console.log("HERE YOU NEED TO WORK TO");
+    if (operationList && modelsOperationList) {
+      let list = [];
+      modelsOperationList.map((item, key) => {
+        operationList.map((element) => {
+          if (element.fields.id === item.fields.operation_id) {
+            element.fields.multiply = item.fields.count;
+            list.push(element);
+          }
+        });
       });
+
+      setOperationsSelectedList(list);
+      setCurrentOperation("");
+      setCurrentOperationId("");
     }
-    setCurrentOperation("");
-    setCurrentOperationId("");
-    setOperationList(_.cloneDeep(operationsData));
+  }, [operationList, modelsOperationList]);
+
+  useEffect(() => {
+    getModelOperationAllFunc();
+    getOperationAllFunc();
   }, []);
 
   const saveObject = (operation, key) => {
@@ -246,7 +282,6 @@ const ModalAddOperation = ({
 
   useEffect(() => {
     if (dataReadyToBeSent) {
-      console.log(operationsSelectedList);
       operationsSelectedList.map((item, key) => {
         saveObject(item, key);
       });
@@ -301,6 +336,28 @@ const ModalAddOperation = ({
           delete item.fields.multiply;
         }
       });
+      let itemToBeDeleted = operationsSelectedList.find(
+        (item) => item.id === id
+      );
+      let modelOperationToBeDeleted = modelsOperationList.find(
+        (item) => item.fields.operation_id === itemToBeDeleted.fields.id
+      );
+      if (modelOperationToBeDeleted) {
+        fetch("/api/modelOperation/deleteModelOperation", {
+          method: "DELETE",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: modelOperationToBeDeleted.fields.id,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            mutate("/api/modelOperation/getModelOperationAll");
+          });
+      }
 
       setOperationsSelectedList(filteredArray);
       setCurrentOperation("");
