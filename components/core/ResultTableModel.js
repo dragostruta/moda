@@ -21,8 +21,8 @@ const ResultTableModel = ({ id, model }) => {
 
   const filterOperationList = (data) => {
     let list = [];
-    data.filter((item) => {
-      model.filter((element) => {
+    data.map((item) => {
+      model.map((element) => {
         if (
           item.fields.id === element.fields.operation_id &&
           element.fields.model_id === id
@@ -39,7 +39,6 @@ const ResultTableModel = ({ id, model }) => {
         }
       });
     });
-    console.log(list);
     setFinalObject(list);
   };
 

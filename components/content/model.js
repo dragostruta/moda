@@ -20,15 +20,20 @@ const Items = ({
 
   const [modelsOperationList, setModelsOperationList] = useState([]);
   const [togglePrint, setTogglePrint] = useState(false);
+  const [auxId, setAuxId] = useState("");
 
-  const getModelOperationAllFunc = async () => {
-    const response = await fetch("/api/modelOperation/getModelOperationAll", {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const getModelOperationAllFunc = async (id) => {
+    console.log(id);
+    const response = await fetch(
+      `/api/modelOperation/getModelOperationAll?model_id=${id}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const data = await response.json();
     data.sort((a, b) => {
       return a.fields.id - b.fields.id;
@@ -48,6 +53,21 @@ const Items = ({
 
   return (
     <>
+      {togglePrint ? (
+        <tr className="hidden">
+          <td>
+            <ReactTemplatePDFModel
+              ref={componentRef}
+              id={auxId}
+              model={modelsOperationList}
+            />
+          </td>
+        </tr>
+      ) : (
+        <tr>
+          <td></td>
+        </tr>
+      )}
       {currentItems &&
         currentItems.map((item, key) => {
           return (
@@ -103,21 +123,11 @@ const Items = ({
                 </div>
               </td>
               <td className="p-2 whitespace-nowrap">
-                {togglePrint ? (
-                  <div className="hidden">
-                    <ReactTemplatePDFModel
-                      ref={componentRef}
-                      id={item.fields.id}
-                      model={modelsOperationList}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
                 <div
                   className="font-medium text-center"
                   onClick={() => {
-                    getModelOperationAllFunc();
+                    setAuxId(item.fields.id);
+                    getModelOperationAllFunc(item.fields.id);
                   }}
                 >
                   <svg

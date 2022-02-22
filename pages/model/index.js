@@ -209,13 +209,16 @@ const ModalAddOperation = ({
   const [dataReadyToBeSent, setDataReadyToBeSent] = useState(false);
 
   const getModelOperationAllFunc = async () => {
-    const response = await fetch("/api/modelOperation/getModelOperationAll", {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `/api/modelOperation/getModelOperationAll?model_id=${currentModelId}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const data = await response.json();
     data.sort((a, b) => {
       return a.fields.id - b.fields.id;
@@ -263,21 +266,37 @@ const ModalAddOperation = ({
   }, []);
 
   const saveObject = (operation, key) => {
-    fetch("/api/modelOperation/createModelOperation", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: "" + parseInt(modelsOperationList.length + key + 1),
-        model_id: currentModelObject.fields.id,
-        operation_id: operation.fields.id,
-        count: "" + operation.fields.multiply,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {});
+    console.log(modelsOperationList);
+    if (
+      modelsOperationList.find((item) => {
+        if (
+          item.fields.model_id !== currentModelObject.fields.id ||
+          item.fields.operation_id !== operation.fields.id ||
+          item.fields.count != operation.fields.multiply
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }) ||
+      modelsOperationList.length === 0
+    ) {
+      fetch("/api/modelOperation/createModelOperation", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: "" + parseInt(modelsOperationList.length + key + 1),
+          model_id: currentModelObject.fields.id,
+          operation_id: operation.fields.id,
+          count: "" + operation.fields.multiply,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {});
+    }
   };
 
   useEffect(() => {
@@ -775,6 +794,7 @@ const Dashboard = () => {
         handleSetToggleModalAddOperation={handleSetToggleModalAddOperation}
         handleToBeDeletedId={handleToBeDeletedId}
         handleSetCurrentModelId={handleSetCurrentModelId}
+        currentModelId={currentModelId}
       />
     </div>
   );

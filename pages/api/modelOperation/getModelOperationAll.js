@@ -2,9 +2,12 @@ import { findModelOperationAll } from "../../../components/database/modelOperati
 
 const getModelOperationAll = async (req, res) => {
   if (req.method === "GET") {
+    const { model_id } = req.query;
     try {
-      const records = await findModelOperationAll();
-
+      let records = await findModelOperationAll();
+      if (model_id) {
+        records = records.filter((item) => item.fields.model_id == model_id);
+      }
       res.json(records);
       res.status(200);
     } catch (err) {
