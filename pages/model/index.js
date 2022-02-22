@@ -270,7 +270,7 @@ const ModalAddOperation = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: "" + parseInt(modelsOperationsData.length + key + 1),
+        id: "" + parseInt(modelsOperationList.length + key + 1),
         model_id: currentModelObject.fields.id,
         operation_id: operation.fields.id,
         count: "" + operation.fields.multiply,

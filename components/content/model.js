@@ -1,7 +1,9 @@
 import useSWR from "swr";
 import ReactPaginate from "react-paginate";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
+import ReactTemplatePDFModel from "../../lib/reactTemplatePDFModel";
+import { useReactToPrint } from "react-to-print";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Items = ({
@@ -11,6 +13,39 @@ const Items = ({
   handleSetToggleModalAddOperation,
   handleSetCurrentModelId,
 }) => {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const [modelsOperationList, setModelsOperationList] = useState([]);
+  const [togglePrint, setTogglePrint] = useState(false);
+
+  const getModelOperationAllFunc = async () => {
+    const response = await fetch("/api/modelOperation/getModelOperationAll", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    setModelsOperationList(data);
+    setTogglePrint(true);
+    setTimeout(() => {
+      handlePrint();
+    }, 1000);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setTogglePrint(false);
+    }, 1500);
+  }, [modelsOperationList]);
+
   return (
     <>
       {currentItems &&
@@ -68,7 +103,23 @@ const Items = ({
                 </div>
               </td>
               <td className="p-2 whitespace-nowrap">
-                <div className="font-medium text-center">
+                {togglePrint ? (
+                  <div className="hidden">
+                    <ReactTemplatePDFModel
+                      ref={componentRef}
+                      id={item.fields.id}
+                      model={modelsOperationList}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
+                <div
+                  className="font-medium text-center"
+                  onClick={() => {
+                    getModelOperationAllFunc();
+                  }}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 cursor-pointer"
