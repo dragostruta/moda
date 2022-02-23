@@ -3,6 +3,7 @@ import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
 const ResultTable = () => {
   const { dispatch, state } = useContext(StoreContext);
+
   const calculateSum = (array) => {
     let sum = 0;
 
@@ -15,8 +16,25 @@ const ResultTable = () => {
     return sum.toFixed(2);
   };
 
+  const calculateTotalSum = () => {
+    let sum = 0;
+    state.finalObject.map((item) => {
+      return item.fields.operationsSelectedList.map((element) => {
+        sum += parseInt(element.fields.total);
+      });
+    });
+    console.log(sum);
+    return sum.toFixed(2);
+  };
+
   return (
     <div className="flex flex-col justify-center h-full">
+      <div className="grid grid-cols-3 gap-4">
+        <div></div>
+        <div></div>
+        <div>Total: {calculateTotalSum()} lei</div>
+      </div>
+
       {state.finalEmployeeList.length > 0
         ? state.finalEmployeeList.map((item, index) => {
             return (
