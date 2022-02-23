@@ -1,16 +1,72 @@
 import useSWR from "swr";
 import ReactPaginate from "react-paginate";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
+import ReactTemplatePDFModel from "../../lib/reactTemplatePDFModel";
+import { useReactToPrint } from "react-to-print";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Items = ({
   currentItems,
   handleSetToggleModalDelete,
   handleToBeDeletedId,
+  handleSetToggleModalAddOperation,
+  handleSetCurrentModelId,
 }) => {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const [modelsOperationList, setModelsOperationList] = useState([]);
+  const [togglePrint, setTogglePrint] = useState(false);
+  const [auxId, setAuxId] = useState("");
+
+  const getModelOperationAllFunc = async (id) => {
+    const response = await fetch(
+      `/api/modelOperation/getModelOperationAll?model_id=${id}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    setModelsOperationList(data);
+    setTogglePrint(true);
+    setTimeout(() => {
+      handlePrint();
+    }, 1000);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setTogglePrint(false);
+    }, 1500);
+  }, [modelsOperationList]);
+
   return (
     <>
+      {togglePrint ? (
+        <tr className="hidden">
+          <td>
+            <ReactTemplatePDFModel
+              ref={componentRef}
+              id={auxId}
+              model={modelsOperationList}
+            />
+          </td>
+        </tr>
+      ) : (
+        <tr>
+          <td></td>
+        </tr>
+      )}
       {currentItems &&
         currentItems.map((item, key) => {
           return (
@@ -18,25 +74,29 @@ const Items = ({
               <td className="p-2 whitespace-nowrap">
                 <div className="font-medium text-center">{item.fields.id}</div>
               </td>
-              <td className="p-5 whitespace-nowrap">
+              <td className="p-2 whitespace-nowrap">
+                <div className="text-center"> {item.fields.name}</div>
+              </td>
+              <td className="p-2 whitespace-nowrap">
                 <div className="font-medium text-center">
-                  {item.fields.Name}
-                </div>
-              </td>
-              <td className="p-2 whitespace-nowrap">
-                <div className="text-center">{item.fields.category}</div>
-              </td>
-              <td className="p-2 whitespace-nowrap">
-                <div className="text-center font-medium text-teal-400">
-                  {item.fields.priceHour}
-                </div>
-              </td>
-              <td className="p-2 whitespace-nowrap">
-                <div className="text-center">{item.fields.time}</div>
-              </td>
-              <td className="p-2 whitespace-nowrap">
-                <div className="text-center font-medium text-teal-400">
-                  {item.fields.cost}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    onClick={() => {
+                      handleSetCurrentModelId(item.fields.id);
+                      handleSetToggleModalAddOperation(true);
+                    }}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
                 </div>
               </td>
               <td className="p-2 whitespace-nowrap">
@@ -61,6 +121,30 @@ const Items = ({
                   </svg>
                 </div>
               </td>
+              <td className="p-2 whitespace-nowrap">
+                <div
+                  className="font-medium text-center"
+                  onClick={() => {
+                    setAuxId(item.fields.id);
+                    getModelOperationAllFunc(item.fields.id);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 cursor-pointer"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                </div>
+              </td>
             </tr>
           );
         })}
@@ -68,12 +152,14 @@ const Items = ({
   );
 };
 
-const Operations = ({
+const Model = ({
   handleSetToggleModalAdd,
   handleSetToggleModalDelete,
   handleToBeDeletedId,
+  handleSetToggleModalAddOperation,
+  handleSetCurrentModelId,
 }) => {
-  const { data, error } = useSWR("/api/operation/getOperationAll", fetcher);
+  const { data, error } = useSWR("/api/model/getModelAll", fetcher);
   const [currentItems, setCurrentItems] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -102,7 +188,7 @@ const Operations = ({
         <div className="flex flex-col justify-center h-full">
           <div className="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg border border-gray-200">
             <header className="px-5 py-4 border-b border-gray-100 flex">
-              <h2 className="font-semibold text-gray-800">Operatiuni</h2>
+              <h2 className="font-semibold text-gray-800">Model</h2>
               <div className="flex-1"></div>
               <button
                 onClick={() => {
@@ -113,7 +199,6 @@ const Operations = ({
                 Adauga
               </button>
             </header>
-
             <div className="p-3">
               <div className="overflow-x-auto">
                 <table className="w-full table-auto">
@@ -122,22 +207,14 @@ const Operations = ({
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Nr.</div>
                       </th>
-                      <th className="p-2 whitespace-nowrap w-[20%]">
+                      <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Nume</div>
                       </th>
-                      <th className="p-2 whitespace-nowrap w-[20%]">
-                        <div className="font-semibold text-center">
-                          Categorie lucrari
-                        </div>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="font-semibold text-center"></div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Lei/Ora</div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Timp</div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-center">Tarif</div>
+                        <div className="font-semibold text-center"></div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center"></div>
@@ -145,11 +222,19 @@ const Operations = ({
                     </tr>
                   </thead>
                   <tbody className="text-sm divide-y divide-gray-100">
-                    <Items
-                      currentItems={currentItems}
-                      handleSetToggleModalDelete={handleSetToggleModalDelete}
-                      handleToBeDeletedId={handleToBeDeletedId}
-                    />
+                    {currentItems ? (
+                      <Items
+                        currentItems={currentItems}
+                        handleSetToggleModalDelete={handleSetToggleModalDelete}
+                        handleToBeDeletedId={handleToBeDeletedId}
+                        handleSetToggleModalAddOperation={
+                          handleSetToggleModalAddOperation
+                        }
+                        handleSetCurrentModelId={handleSetCurrentModelId}
+                      />
+                    ) : (
+                      <tr></tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -214,4 +299,4 @@ const Operations = ({
   );
 };
 
-export default Operations;
+export default Model;

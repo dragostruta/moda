@@ -20,6 +20,8 @@ const Dashboard = () => {
 
   const [preview, setPreview] = useState(false);
 
+  const [currentModel, setCurrentModel] = useState("");
+
   // Component State The id of the current empolyee selected.
   const [currentEmployeeId, setCurrentEmployeeId] = useState("");
 
@@ -36,6 +38,10 @@ const Dashboard = () => {
   useEffect(() => {
     toggleLoadingSpinner(false, dispatch);
   }, []);
+
+  const handleSelectCurrentModel = (value) => {
+    setCurrentModel(value);
+  };
 
   // Handles the set in the state of the Current Employee
   const handleSelectCurrentEmployee = (value) => {
@@ -57,25 +63,57 @@ const Dashboard = () => {
 
   // Saves the current Employee in the Context State and resets the current employee id
   const handleAddEmployeeToFinalObject = (employeeObject) => {
-    if (state.finalObject.find((item) => item.id === employeeObject.id)) {
+    if (
+      state.finalObject.find(
+        (item) =>
+          item.id === employeeObject.id && item.fields.model === currentModel
+      )
+    ) {
       let stateClone = _.cloneDeep(state);
+      let employeeList = [];
       let trueIndex = null;
       stateClone.finalObject.map((item, index) => {
-        if (item.id === employeeObject.id) {
+        if (
+          item.id === employeeObject.id &&
+          item.fields.model === currentModel
+        ) {
           trueIndex = index;
         }
+        if (employeeList.indexOf(item.fields.id)) {
+          employeeList.push(item.fields.id);
+        }
       });
+
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
+        payload: { finalEmployeeList: employeeList },
+      });
+
       stateClone.finalObject[trueIndex] = employeeObject;
+      stateClone.finalObject[trueIndex].fields["model"] = currentModel;
+
       dispatch({
         type: ACTION_TYPES.SET_FINAL_OBJECT,
         payload: { finalObject: stateClone.finalObject },
       });
     } else {
       if (employeeObject) {
+        employeeObject.fields["model"] = currentModel;
         dispatch({
           type: ACTION_TYPES.SET_FINAL_OBJECT,
           payload: { finalObject: state.finalObject.concat(employeeObject) },
         });
+
+        if (state.finalEmployeeList.indexOf(employeeObject.fields.id) === -1) {
+          dispatch({
+            type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
+            payload: {
+              finalEmployeeList: state.finalEmployeeList.concat(
+                employeeObject.fields.id
+              ),
+            },
+          });
+        }
       }
       handleSelectCurrentEmployee("");
       handleCurrentEmployeeId("");
@@ -100,6 +138,8 @@ const Dashboard = () => {
           handleAddEmployeeToFinalObject={handleAddEmployeeToFinalObject}
           currentEmployeeId={currentEmployeeId}
           handleCurrentEmployeeId={handleCurrentEmployeeId}
+          handleSelectCurrentModel={handleSelectCurrentModel}
+          currentModel={currentModel}
         />
       )}
       {/* We check if the Bool Operation Modal is true, if so we display the modal.
@@ -111,6 +151,7 @@ const Dashboard = () => {
           handleSelectCurrentEmployee={handleSelectCurrentEmployee}
           handleAddEmployeeToFinalObject={handleAddEmployeeToFinalObject}
           handleCurrentEmployeeId={handleCurrentEmployeeId}
+          currentModel={currentModel}
         />
       ) : (
         ""

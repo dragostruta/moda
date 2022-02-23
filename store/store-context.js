@@ -7,6 +7,7 @@ export const ACTION_TYPES = {
   SET_LOADING_SPINNER: "SET_LOADING_SPINNER",
   SET_LOGGED_USER: "SET_LOGGED_USER",
   SET_FINAL_OBJECT: "SET_FINAL_OBJECT",
+  SET_FINAL_EMPLOYEE_LIST: "SET_FINAL_EMPLOYEE_LIST",
 };
 
 const storeReducer = (state, action) => {
@@ -23,6 +24,9 @@ const storeReducer = (state, action) => {
     case ACTION_TYPES.SET_FINAL_OBJECT: {
       return { ...state, finalObject: action.payload.finalObject };
     }
+    case ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST: {
+      return { ...state, finalEmployeeList: action.payload.finalEmployeeList };
+    }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -34,6 +38,7 @@ const StoreProvider = ({ children }) => {
     loadingSpinner: false,
     loggedUser: null,
     finalObject: [],
+    finalEmployeeList: [],
   };
 
   const [state, dispatch] = useReducer(storeReducer, initialState);

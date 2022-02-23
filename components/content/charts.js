@@ -1,8 +1,11 @@
 import { useContext, useEffect, useRef } from "react";
+import useSWR from "swr";
 import { useState } from "react/cjs/react.development";
 import GeneratePDF from "../../lib/GeneratePDF";
 import { findEmployeeFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const ChartsContent = ({
   handleToggleAddOperationsModal,
@@ -13,16 +16,53 @@ const ChartsContent = ({
   handleAddEmployeeToFinalObject,
   currentEmployeeId,
   handleCurrentEmployeeId,
+  handleSelectCurrentModel,
+  currentModel,
 }) => {
   // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
+  const { data, error } = useSWR("/api/model/getModelAll", fetcher);
 
   // Component for an entire row
   // employeeId - current employee id
   // lastOne - bool if the row is the last one from the table
-  const EmployeeRow = ({ employeeId, lastOne, total, totalTime }) => {
+  const EmployeeRow = ({
+    employeeId,
+    lastOne,
+    total,
+    totalTime,
+    currentModelId,
+  }) => {
     return (
       <tr>
+        <td className="p-5 whitespace-nowrap w-24">
+          <div className="font-medium text-center">
+            <div className="flex justify-center">
+              <div className="mb-3 xl:w-96">
+                <select
+                  className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  aria-label="Default select example"
+                  onChange={(e) => {
+                    handleSelectCurrentModel(e.target.value);
+                  }}
+                  value={currentModelId}
+                >
+                  <option defaultValue value={""}>
+                    Alege model
+                  </option>
+                  {data &&
+                    data.map((item, key) => {
+                      return (
+                        <option key={key} value={item.fields.id}>
+                          {item.fields.id + " - " + item.fields.name}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+          </div>
+        </td>
         <td className="p-5 whitespace-nowrap w-24">
           <div className="font-medium text-center">
             <div className="flex justify-center">
@@ -67,6 +107,7 @@ const ChartsContent = ({
                       handleSelectCurrentEmployee(
                         findEmployeeFromArray(employeeId, employeesList)
                       );
+                      handleSelectCurrentModel(currentModelId);
                       handleToggleAddOperationsModal(true);
                     }}
                   >
@@ -170,12 +211,17 @@ const ChartsContent = ({
             <EmployeeRow
               key={key}
               employeeId={state.finalObject[key].id}
+              currentModelId={state.finalObject[key].fields.model}
               total={calculateTotalPriceForEmplyee(state.finalObject[key])}
               totalTime={calculateTotalTimeForEmployee(state.finalObject[key])}
             />
           );
         })}
-        <EmployeeRow employeeId={currentEmployeeId} lastOne={true} />
+        <EmployeeRow
+          employeeId={currentEmployeeId}
+          lastOne={true}
+          currentModelId={currentModel}
+        />
       </>
     );
   };
@@ -196,7 +242,11 @@ const ChartsContent = ({
   // And searches for the employee after that id
   // And sends to the parent component state the current employee in order to know
   const handleSelectEmployee = (id) => {
-    if (!state.finalObject.find((item) => item.id === id)) {
+    if (
+      !state.finalObject.find(
+        (item) => item.id === id && item.fields.model === currentModel
+      )
+    ) {
       handleCurrentEmployeeId(id);
       const employee = findEmployeeFromArray(id, employeesList);
       handleSelectCurrentEmployee(employee);
@@ -216,6 +266,9 @@ const ChartsContent = ({
                 <table className="w-full table-auto">
                   <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                     <tr>
+                      <th className="p-2 whitespace-nowrap ">
+                        <div className="font-semibold text-center">Model</div>
+                      </th>
                       <th className="p-2 whitespace-nowrap ">
                         <div className="font-semibold text-center">Angajat</div>
                       </th>

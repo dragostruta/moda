@@ -11,6 +11,7 @@ const AddOperationsModal = ({
   handleSelectCurrentEmployee,
   handleAddEmployeeToFinalObject,
   handleCurrentEmployeeId,
+  currentModel,
 }) => {
   //  Operations list data fetched from the databasae
   const { operationsData, isLoading, isError } = GetOperationAll();
@@ -27,32 +28,66 @@ const AddOperationsModal = ({
 
   const [operationList, setOperationList] = useState([]);
 
-  // At every change of the OperationsData value we sort it.
-  useEffect(() => {
-    if (operationsData) {
-      operationsData.sort((a, b) => {
-        return a.fields.id - b.fields.id;
-      });
-      setOperationList(_.cloneDeep(operationsData));
-    }
-  }, [operationsData]);
+  const [modelsOperationList, setModelsOperationList] = useState([]);
+
+  const getModelOperationAllFunc = async () => {
+    const response = await fetch(
+      `/api/modelOperation/getModelOperationAll?model_id=${currentModel}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    setModelsOperationList(data);
+  };
 
   // At the first render of the page we populate the table if the current employee
   // has already some operations saved and reset the current operation
   useEffect(() => {
     if (
       state.finalObject.length > 0 &&
-      state.finalObject?.find((item) => item.id === currentEmployee.id)
+      state.finalObject?.find(
+        (item) =>
+          item.id === currentEmployee.id && item.fields.model === currentModel
+      )
     ) {
       setOperationsSelectedList(
-        state.finalObject?.find((item) => item.id === currentEmployee.id).fields
-          ?.operationsSelectedList ?? []
+        state.finalObject?.find(
+          (item) =>
+            item.id === currentEmployee.id && item.fields.model === currentModel
+        ).fields?.operationsSelectedList ?? []
       );
     }
     setCurrentOperation("");
     setCurrentOperationId("");
-    setOperationList(_.cloneDeep(operationsData));
+    getModelOperationAllFunc();
   }, []);
+
+  // At every change of the OperationsData value we sort it.
+  useEffect(() => {
+    if (operationsData) {
+      let list = [];
+      modelsOperationList.map((element) => {
+        operationsData.map((item) => {
+          if (item.fields.id == element.fields.operation_id) {
+            list.push(_.cloneDeep(item));
+          }
+        });
+      });
+      list.sort((a, b) => {
+        return a.fields.id - b.fields.id;
+      });
+
+      setOperationList(list);
+    }
+  }, [operationsData, modelsOperationList]);
 
   // Component Operation Row
   const OperationRow = ({
@@ -62,6 +97,8 @@ const AddOperationsModal = ({
     cost,
     total,
     multiply,
+    category,
+    priceHour,
   }) => {
     return (
       <tr>
@@ -92,6 +129,14 @@ const AddOperationsModal = ({
                 </select>
               </div>
             </div>
+          </div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-center">{category ?? ""}</div>
+        </td>
+        <td className="p-2 whitespace-nowrap">
+          <div className="text-center font-medium text-teal-400">
+            {priceHour ?? 0}
           </div>
         </td>
         <td className="p-2 whitespace-nowrap">
@@ -182,6 +227,8 @@ const AddOperationsModal = ({
               operationId={operationsSelectedList[key].id}
               time={operationsSelectedList[key].fields.time}
               cost={operationsSelectedList[key].fields.cost}
+              category={operationsSelectedList[key].fields.category}
+              priceHour={operationsSelectedList[key].fields.priceHour}
               total={operationsSelectedList[key].fields.total}
               multiply={operationsSelectedList[key].fields.multiply}
             />
@@ -192,6 +239,8 @@ const AddOperationsModal = ({
           lastOne={true}
           time={currentOperation.fields?.time}
           cost={currentOperation.fields?.cost}
+          category={currentOperation.fields?.category}
+          priceHour={currentOperation.fields?.priceHour}
           total={currentOperation.fields?.total}
           multiply={currentOperation.fields?.multiply}
         />
@@ -215,6 +264,7 @@ const AddOperationsModal = ({
   // Adding a new row and saving the data from the previous row into a list
   const handleAddOperationRow = (id) => {
     const operation = findOperationFromArray(id, operationList);
+    operation.fields["model"] = currentModel;
     setOperationsSelectedList(operationsSelectedList.concat(operation));
     setCurrentOperationId("");
     setCurrentOperation("");
@@ -321,8 +371,17 @@ const AddOperationsModal = ({
                   <div className="font-semibold text-center">Operatiune</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-center">
+                    Categorie lucrari
+                  </div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-center">Lei/Ora</div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Timp</div>
                 </th>
+
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Tarif</div>
                 </th>
