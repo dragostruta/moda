@@ -11,6 +11,7 @@ const AddOperationsModal = ({
   handleSelectCurrentEmployee,
   handleAddEmployeeToFinalObject,
   handleCurrentEmployeeId,
+  currentModel,
 }) => {
   //  Operations list data fetched from the databasae
   const { operationsData, isLoading, isError } = GetOperationAll();
@@ -27,32 +28,67 @@ const AddOperationsModal = ({
 
   const [operationList, setOperationList] = useState([]);
 
-  // At every change of the OperationsData value we sort it.
-  useEffect(() => {
-    if (operationsData) {
-      operationsData.sort((a, b) => {
-        return a.fields.id - b.fields.id;
-      });
-      setOperationList(_.cloneDeep(operationsData));
-    }
-  }, [operationsData]);
+  const [modelsOperationList, setModelsOperationList] = useState([]);
+
+  const getModelOperationAllFunc = async () => {
+    const response = await fetch(
+      `/api/modelOperation/getModelOperationAll?model_id=${currentModel}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    setModelsOperationList(data);
+  };
 
   // At the first render of the page we populate the table if the current employee
   // has already some operations saved and reset the current operation
   useEffect(() => {
+    console.log(state.finalObject);
     if (
       state.finalObject.length > 0 &&
-      state.finalObject?.find((item) => item.id === currentEmployee.id)
+      state.finalObject?.find(
+        (item) =>
+          item.id === currentEmployee.id && item.fields.model === currentModel
+      )
     ) {
       setOperationsSelectedList(
-        state.finalObject?.find((item) => item.id === currentEmployee.id).fields
-          ?.operationsSelectedList ?? []
+        state.finalObject?.find(
+          (item) =>
+            item.id === currentEmployee.id && item.fields.model === currentModel
+        ).fields?.operationsSelectedList ?? []
       );
     }
     setCurrentOperation("");
     setCurrentOperationId("");
-    setOperationList(_.cloneDeep(operationsData));
+    getModelOperationAllFunc();
   }, []);
+
+  // At every change of the OperationsData value we sort it.
+  useEffect(() => {
+    if (operationsData) {
+      let list = [];
+      modelsOperationList.map((element) => {
+        operationsData.map((item) => {
+          if (item.fields.id == element.fields.operation_id) {
+            list.push(_.cloneDeep(item));
+          }
+        });
+      });
+      list.sort((a, b) => {
+        return a.fields.id - b.fields.id;
+      });
+
+      setOperationList(list);
+    }
+  }, [operationsData, modelsOperationList]);
 
   // Component Operation Row
   const OperationRow = ({
@@ -229,6 +265,7 @@ const AddOperationsModal = ({
   // Adding a new row and saving the data from the previous row into a list
   const handleAddOperationRow = (id) => {
     const operation = findOperationFromArray(id, operationList);
+    operation.fields["model"] = currentModel;
     setOperationsSelectedList(operationsSelectedList.concat(operation));
     setCurrentOperationId("");
     setCurrentOperation("");

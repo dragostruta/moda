@@ -95,7 +95,9 @@ const OperationRow = ({
         </div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <div className="font-medium text-center">{total ?? 0}</div>
+        <div className="font-medium text-center">
+          {cost && multiply ? (cost * multiply).toFixed(2) : 0}
+        </div>
       </td>
       <td className="p-2 whitespace-nowrap">
         <div className="font-medium text-center">
@@ -200,6 +202,8 @@ const ModalAddOperation = ({
 }) => {
   //   const { modelsOperationsData } = GetModelOperationAll();
   const [modelsOperationList, setModelsOperationList] = useState([]);
+  const [modelsOperationListAllModels, setModelsOperationListAllModels] =
+    useState([]);
   const [currentModelObject, setCurrentModelObject] = useState("");
   const [operationsSelectedList, setOperationsSelectedList] = useState([]);
   const [currentOperation, setCurrentOperation] = useState("");
@@ -225,6 +229,22 @@ const ModalAddOperation = ({
     });
 
     setModelsOperationList(data);
+  };
+
+  const getModelOperationAllModelsFunc = async () => {
+    const response = await fetch(`/api/modelOperation/getModelOperationAll`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+
+    setModelsOperationListAllModels(data);
   };
 
   const getOperationAllFunc = async () => {
@@ -263,22 +283,17 @@ const ModalAddOperation = ({
   useEffect(() => {
     getModelOperationAllFunc();
     getOperationAllFunc();
+    getModelOperationAllModelsFunc();
   }, []);
 
   const saveObject = (operation, key) => {
-    console.log(modelsOperationList);
     if (
-      modelsOperationList.find((item) => {
-        if (
-          item.fields.model_id !== currentModelObject.fields.id ||
-          item.fields.operation_id !== operation.fields.id ||
-          item.fields.count != operation.fields.multiply
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      }) ||
+      !modelsOperationList.find(
+        (item) =>
+          item.fields.model_id == currentModelObject.fields.id &&
+          item.fields.operation_id == operation.fields.id &&
+          item.fields.count == operation.fields.multiply
+      ) ||
       modelsOperationList.length === 0
     ) {
       fetch("/api/modelOperation/createModelOperation", {
@@ -288,7 +303,7 @@ const ModalAddOperation = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: "" + parseInt(modelsOperationList.length + key + 1),
+          id: "" + parseInt(modelsOperationListAllModels.length + key + 1),
           model_id: currentModelObject.fields.id,
           operation_id: operation.fields.id,
           count: "" + operation.fields.multiply,
