@@ -70,6 +70,7 @@ const Dashboard = () => {
       )
     ) {
       let stateClone = _.cloneDeep(state);
+      let employeeList = [];
       let trueIndex = null;
       stateClone.finalObject.map((item, index) => {
         if (
@@ -78,7 +79,17 @@ const Dashboard = () => {
         ) {
           trueIndex = index;
         }
+        if (employeeList.indexOf(item.fields.id)) {
+          employeeList.push(item.fields.id);
+        }
       });
+      console.log(employeeList, "list");
+
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
+        payload: { finalEmployeeList: employeeList },
+      });
+
       stateClone.finalObject[trueIndex] = employeeObject;
       stateClone.finalObject[trueIndex].fields["model"] = currentModel;
 
@@ -93,6 +104,17 @@ const Dashboard = () => {
           type: ACTION_TYPES.SET_FINAL_OBJECT,
           payload: { finalObject: state.finalObject.concat(employeeObject) },
         });
+
+        if (state.finalEmployeeList.indexOf(employeeObject.fields.id) === -1) {
+          dispatch({
+            type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
+            payload: {
+              finalEmployeeList: state.finalEmployeeList.concat(
+                employeeObject.fields.id
+              ),
+            },
+          });
+        }
       }
       handleSelectCurrentEmployee("");
       handleCurrentEmployeeId("");

@@ -3,28 +3,13 @@ import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
 const ResultTable = () => {
   const { dispatch, state } = useContext(StoreContext);
-  const [employeeList, setEmplyeeList] = useState([]);
-
-  useEffect(() => {
-    let list = employeeList;
-    state.finalObject.map((item, index) => {
-      if (list.indexOf(item.fields.id) === -1) {
-        list.push(item.fields.id);
-      }
-    });
-    setEmplyeeList(list);
-  }, []);
-
-  useEffect(() => {
-    console.log(state.finalObject);
-    console.log(employeeList);
-  }, [employeeList]);
-
   const calculateSum = (array) => {
     let sum = 0;
 
     array?.map((item, index) => {
-      sum = sum + parseFloat(item.fields.total);
+      item.map((element) => {
+        sum = sum + parseFloat(element);
+      });
     });
 
     return sum.toFixed(2);
@@ -32,11 +17,8 @@ const ResultTable = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      {employeeList.length > 0
-        ? employeeList.map((item, index) => {
-            let employeeObject = state.finalObject.find(
-              (element) => element.fields.id === item
-            );
+      {state.finalEmployeeList.length > 0
+        ? state.finalEmployeeList.map((item, index) => {
             return (
               <div
                 key={index}
@@ -52,9 +34,13 @@ const ResultTable = () => {
                         <tr>
                           <th className="p-2  ">
                             <div className="font-semibold text-center">
-                              {employeeObject.fields.FirstName +
+                              {state.finalObject.find(
+                                (element) => element.fields.id === item
+                              ).fields.FirstName +
                                 " " +
-                                employeeObject.fields.LastName}
+                                state.finalObject.find(
+                                  (element) => element.fields.id === item
+                                ).fields.LastName}
                             </div>
                           </th>
                           <th className="p-2 ">
@@ -93,7 +79,6 @@ const ResultTable = () => {
                               Cantitate
                             </div>
                           </th>
-
                           <th className="p-2 ">
                             <div className="font-semibold text-center">
                               {" "}
@@ -105,9 +90,8 @@ const ResultTable = () => {
                       <tbody className="text-sm divide-y divide-gray-100">
                         {state.finalObject.map((element, index) => {
                           if (element.fields.id === item) {
-                            element.fields.operationsSelectedList?.map(
+                            return element.fields.operationsSelectedList?.map(
                               (subItem, subIndex) => {
-                                console.log(subItem);
                                 return (
                                   <tr key={subIndex} className="border-b">
                                     <td className="p-2">
@@ -146,7 +130,18 @@ const ResultTable = () => {
                     <div>
                       <div className="text-[18px] flex justify-end font-semibold p-2 pr-5">
                         Total castiguri individuale:{" "}
-                        {/* {calculateSum(item.fields.operationsSelectedList)} lei */}
+                        {calculateSum(
+                          state.finalObject.map((element, index) => {
+                            if (element.fields.id === item) {
+                              return element.fields.operationsSelectedList?.map(
+                                (subItem) => {
+                                  return subItem.fields.total;
+                                }
+                              );
+                            }
+                          })
+                        )}{" "}
+                        lei
                       </div>
                     </div>
                   </div>
