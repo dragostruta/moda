@@ -83,7 +83,6 @@ const Dashboard = () => {
           employeeList.push(item.fields.id);
         }
       });
-      console.log(employeeList, "list");
 
       dispatch({
         type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,

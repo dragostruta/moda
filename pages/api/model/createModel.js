@@ -15,7 +15,6 @@ const createModel = async (req, res) => {
           res.json(records);
           res.status(200);
         } else {
-          console.log(req.body);
           if (name) {
             const records = await createModelByFields({
               id,

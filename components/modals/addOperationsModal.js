@@ -51,7 +51,6 @@ const AddOperationsModal = ({
   // At the first render of the page we populate the table if the current employee
   // has already some operations saved and reset the current operation
   useEffect(() => {
-    console.log(state.finalObject);
     if (
       state.finalObject.length > 0 &&
       state.finalObject?.find(

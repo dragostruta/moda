@@ -7,7 +7,7 @@ const ResultTable = () => {
     let sum = 0;
 
     array?.map((item, index) => {
-      item.map((element) => {
+      item?.map((element) => {
         sum = sum + parseFloat(element);
       });
     });

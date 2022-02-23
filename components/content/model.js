@@ -23,7 +23,6 @@ const Items = ({
   const [auxId, setAuxId] = useState("");
 
   const getModelOperationAllFunc = async (id) => {
-    console.log(id);
     const response = await fetch(
       `/api/modelOperation/getModelOperationAll?model_id=${id}`,
       {
