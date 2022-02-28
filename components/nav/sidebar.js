@@ -57,7 +57,7 @@ const SideBar = () => {
               <div className="pr-2">
                 <BookIcon />
               </div>
-              <span>Model</span>
+              <span>Norma Bucata</span>
             </div>
           </a>
         </Link>
@@ -89,7 +89,7 @@ const SideBar = () => {
               <div className="pr-2">
                 <ChartIcon />
               </div>
-              <span>Norma</span>
+              <span>Castig</span>
             </div>
           </a>
         </Link>

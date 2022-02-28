@@ -2,11 +2,18 @@ import { findModelOperationAll } from "../../../components/database/modelOperati
 
 const getModelOperationAll = async (req, res) => {
   if (req.method === "GET") {
-    const { model_id } = req.query;
+    const { model_id, operation_id } = req.query;
     try {
       let records = await findModelOperationAll();
-      if (model_id) {
+      if (model_id && !operation_id) {
         records = records.filter((item) => item.fields.model_id == model_id);
+      }
+      if (model_id && operation_id) {
+        records = records.find(
+          (item) =>
+            item.fields.model_id == model_id &&
+            item.fields.operation_id === operation_id
+        );
       }
       res.json(records);
       res.status(200);

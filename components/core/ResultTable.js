@@ -23,15 +23,42 @@ const ResultTable = () => {
         sum += parseInt(element.fields.total);
       });
     });
-    console.log(sum);
     return sum.toFixed(2);
+  };
+
+  const calculatePricePerModel = () => {
+    return (
+      <div>
+        {state.finalModelList.map((item) => {
+          let sum = 0;
+          let print = false;
+          state.finalObject.map((element) => {
+            if (element.fields.model === item.fields.id) {
+              print = true;
+            }
+            element.fields.operationsSelectedList.map((item2) => {
+              if (item2.fields.model === item.fields.id) {
+                sum += parseFloat(item2.fields.cost);
+              }
+            });
+          });
+          if (print) {
+            return (
+              <div>
+                Total {item.fields.id + " - " + item.fields.name} : {sum} lei
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
   };
 
   return (
     <div className="flex flex-col justify-center h-full">
       <div className="grid grid-cols-3 gap-4">
         <div></div>
-        <div></div>
+        <div>{calculatePricePerModel()}</div>
         <div>Total: {calculateTotalSum()} lei</div>
       </div>
 
@@ -119,7 +146,9 @@ const ResultTable = () => {
                                     </td>
                                     <td className="p-2">
                                       <div className="font-semibold text-center">
-                                        {subItem.fields.Name}
+                                        {subItem.fields.id +
+                                          " - " +
+                                          subItem.fields.Name}
                                       </div>
                                     </td>
                                     <td className="p-2">
