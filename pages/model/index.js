@@ -73,9 +73,6 @@ const OperationRow = ({
         <div className="text-center">{time ?? "00:00"}</div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <div className="text-center font-medium text-teal-400">{cost ?? 0}</div>
-      </td>
-      <td className="p-2 whitespace-nowrap">
         <div className="font-medium text-teal-400 w-6 flex">
           {operationId ? (
             !multiply ? (
@@ -92,11 +89,6 @@ const OperationRow = ({
           ) : (
             ""
           )}
-        </div>
-      </td>
-      <td className="p-2 whitespace-nowrap">
-        <div className="font-medium text-center">
-          {cost && multiply ? (cost * multiply).toFixed(2) : 0}
         </div>
       </td>
       <td className="p-2 whitespace-nowrap">
@@ -472,12 +464,6 @@ const ModalAddOperation = ({
 
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Tarif</div>
-                </th>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-center">Buc.</div>
-                </th>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-center">Manopera</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center"></div>

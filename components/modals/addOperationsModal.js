@@ -122,7 +122,7 @@ const AddOperationsModal = ({
                       return (
                         <option key={key} value={item.id}>
                           {" "}
-                          {item.fields.Name}
+                          {item.fields.id + " - " + item.fields.Name}
                         </option>
                       );
                     })}
@@ -303,11 +303,23 @@ const AddOperationsModal = ({
     }
   };
 
-  const handleSelectOperation = (value) => {
+  const handleSelectOperation = async (value) => {
     if (!operationsSelectedList.find((item) => item.id === value)) {
       const operation = findOperationFromArray(value, operationList);
+      const response = await fetch(
+        `/api/modelOperation/getModelOperationAll?model_id=${currentModel}&operation_id=${operation.fields.id}`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
       setCurrentOperationId(value);
       operation.fields.total = 0;
+      operation.fields.cost = data.fields.count;
       setCurrentOperation(operation);
     }
   };

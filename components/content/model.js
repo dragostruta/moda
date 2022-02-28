@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import ReactPaginate from "react-paginate";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import ReactTemplatePDFModel from "../../lib/reactTemplatePDFModel";
 import { useReactToPrint } from "react-to-print";
@@ -188,7 +188,7 @@ const Model = ({
         <div className="flex flex-col justify-center h-full">
           <div className="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg border border-gray-200">
             <header className="px-5 py-4 border-b border-gray-100 flex">
-              <h2 className="font-semibold text-gray-800">Model</h2>
+              <h2 className="font-semibold text-gray-800">Norma Bucata</h2>
               <div className="flex-1"></div>
               <button
                 onClick={() => {

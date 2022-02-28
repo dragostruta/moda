@@ -34,9 +34,29 @@ const Dashboard = () => {
     }
   }, [employeesData]);
 
+  const getModelAllFunc = async () => {
+    const response = await fetch(`/api/model/getModelAll`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    console.log(data);
+    dispatch({
+      type: ACTION_TYPES.SET_FINAL_MODEL_LIST,
+      payload: { finalModelList: data },
+    });
+  };
+
   // At the first render of the component we stop the loading spinner
   useEffect(() => {
     toggleLoadingSpinner(false, dispatch);
+    getModelAllFunc();
   }, []);
 
   const handleSelectCurrentModel = (value) => {
