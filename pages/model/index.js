@@ -50,7 +50,7 @@ const OperationRow = ({
                         return (
                           <option key={key} value={item.id}>
                             {" "}
-                            {item.fields.Name}
+                            {item.fields.id + " - " + item.fields.Name}
                           </option>
                         );
                       })
@@ -419,7 +419,11 @@ const ModalAddOperation = ({
           <div className="flex justify-end p-2">
             <header className="px-5 py-4">
               <h2 className="font-semibold text-gray-800">
-                {currentModelObject ? currentModelObject.fields.name : ""}
+                {currentModelObject
+                  ? currentModelObject.fields.id +
+                    " - " +
+                    currentModelObject.fields.name
+                  : ""}
               </h2>
             </header>
             <button
