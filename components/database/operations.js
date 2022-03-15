@@ -14,7 +14,7 @@ export const findOperationById = async (id) => {
 };
 
 export const findOperationAll = async () => {
-  return await findAll(table);
+  return await findAll(table, "nr");
 };
 
 export const createOperationByFields = async (params) => {
