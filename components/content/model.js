@@ -17,10 +17,48 @@ const Items = ({
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-
-  const [modelsOperationList, setModelsOperationList] = useState([]);
   const [togglePrint, setTogglePrint] = useState(false);
   const [auxId, setAuxId] = useState("");
+  const [finalObject, setFinalObject] = useState([]);
+
+  const filterOperationList = async (data, modelList) => {
+    let list = [];
+    modelList.map((element) => {
+      let result = data.find(
+        (item) => item.fields.id === element.fields.operation_id
+      );
+      if (result) {
+        list.push({
+          id: result.fields.id,
+          name: result.fields.Name,
+          time: result.fields.time,
+          cost: result.fields.cost,
+          category: result.fields.category,
+          priceHour: result.fields.priceHour,
+          count: element.fields.count,
+        });
+      }
+    });
+    setFinalObject(list);
+    setTogglePrint(true);
+    handlePrint();
+    setTogglePrint(false);
+  };
+
+  const getOperationAllFunc = async (modelList) => {
+    const response = await fetch("/api/operation/getOperationAll", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    data.sort((a, b) => {
+      return a.fields.id - b.fields.id;
+    });
+    filterOperationList(data, modelList);
+  };
 
   const getModelOperationAllFunc = async (id) => {
     const response = await fetch(
@@ -37,18 +75,8 @@ const Items = ({
     data.sort((a, b) => {
       return a.fields.id - b.fields.id;
     });
-    setModelsOperationList(data);
-    setTogglePrint(true);
-    setTimeout(() => {
-      handlePrint();
-    }, 1000);
+    getOperationAllFunc(data);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setTogglePrint(false);
-    }, 1500);
-  }, [modelsOperationList]);
 
   return (
     <>
@@ -58,7 +86,7 @@ const Items = ({
             <ReactTemplatePDFModel
               ref={componentRef}
               id={auxId}
-              model={modelsOperationList}
+              model={finalObject}
             />
           </td>
         </tr>

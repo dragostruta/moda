@@ -228,10 +228,24 @@ const ChartsContent = ({
 
   const handleDelete = (id) => {
     if (state.finalObject.find((item) => item.id === id)) {
-      let filteredArray = state.finalObject.filter((item) => item.id !== id);
+      let employeeToBeDeleted = state.finalObject.filter(
+        (item) => item.id === id
+      );
+      let filteredArrayObject = state.finalObject.filter(
+        (item) => item.id !== id
+      );
       dispatch({
         type: ACTION_TYPES.SET_FINAL_OBJECT,
-        payload: { finalObject: filteredArray },
+        payload: { finalObject: filteredArrayObject },
+      });
+
+      let filteredArrayEmployees = state.finalEmployeeList.filter(
+        (item) => item !== employeeToBeDeleted[0].fields.id
+      );
+
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
+        payload: { finalEmployeeList: filteredArrayEmployees },
       });
     }
     handleSelectCurrentEmployee("");
