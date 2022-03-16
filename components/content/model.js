@@ -42,6 +42,7 @@ const Items = ({
     setFinalObject(list);
     setTogglePrint(true);
     handlePrint();
+    setTogglePrint(false);
   };
 
   const getOperationAllFunc = async (modelList) => {

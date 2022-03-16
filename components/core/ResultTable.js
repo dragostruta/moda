@@ -56,7 +56,7 @@ const ResultTable = () => {
 
   return (
     <div className="flex flex-col justify-center h-full">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 py-4">
         <div></div>
         <div>{calculatePricePerModel()}</div>
         <div>Total: {calculateTotalSum()} lei</div>

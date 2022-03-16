@@ -46,7 +46,6 @@ const Dashboard = () => {
     data.sort((a, b) => {
       return a.fields.id - b.fields.id;
     });
-    console.log(data);
     dispatch({
       type: ACTION_TYPES.SET_FINAL_MODEL_LIST,
       payload: { finalModelList: data },
