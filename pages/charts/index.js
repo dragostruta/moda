@@ -52,10 +52,54 @@ const Dashboard = () => {
     });
   };
 
+  const saveFinalObject = (object, id) => {
+    fetch("/api/normaHistory/createNormaHistory", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        norma: JSON.stringify(object),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {});
+  };
+
+  const getFinalObject = async (id) => {
+    const response = await fetch(
+      `/api/normaHistory/getNormaHistoryById?id=${id}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    if (id === "0") {
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_OBJECT,
+        payload: { finalObject: JSON.parse(data[0].fields.norma) },
+      });
+    }
+    if (id === "1") {
+      dispatch({
+        type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
+        payload: { finalEmployeeList: JSON.parse(data[0].fields.norma) },
+      });
+    }
+  };
+
   // At the first render of the component we stop the loading spinner
   useEffect(() => {
     toggleLoadingSpinner(false, dispatch);
     getModelAllFunc();
+    getFinalObject("0");
+    getFinalObject("1");
   }, []);
 
   const handleSelectCurrentModel = (value) => {
@@ -107,6 +151,7 @@ const Dashboard = () => {
         type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
         payload: { finalEmployeeList: employeeList },
       });
+      saveFinalObject(employeeList, "1");
 
       stateClone.finalObject[trueIndex] = employeeObject;
       stateClone.finalObject[trueIndex].fields["model"] = currentModel;
@@ -115,6 +160,7 @@ const Dashboard = () => {
         type: ACTION_TYPES.SET_FINAL_OBJECT,
         payload: { finalObject: stateClone.finalObject },
       });
+      saveFinalObject(stateClone.finalObject, "0");
     } else {
       if (employeeObject) {
         employeeObject.fields["model"] = currentModel;
@@ -122,6 +168,7 @@ const Dashboard = () => {
           type: ACTION_TYPES.SET_FINAL_OBJECT,
           payload: { finalObject: state.finalObject.concat(employeeObject) },
         });
+        saveFinalObject(state.finalObject.concat(employeeObject), "0");
 
         if (state.finalEmployeeList.indexOf(employeeObject.fields.id) === -1) {
           dispatch({
@@ -132,6 +179,10 @@ const Dashboard = () => {
               ),
             },
           });
+          saveFinalObject(
+            state.finalEmployeeList.concat(employeeObject.fields.id),
+            "1"
+          );
         }
       }
       handleSelectCurrentEmployee("");
@@ -159,6 +210,7 @@ const Dashboard = () => {
           handleCurrentEmployeeId={handleCurrentEmployeeId}
           handleSelectCurrentModel={handleSelectCurrentModel}
           currentModel={currentModel}
+          saveFinalObject={saveFinalObject}
         />
       )}
       {/* We check if the Bool Operation Modal is true, if so we display the modal.

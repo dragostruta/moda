@@ -1,7 +1,5 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext } from "react";
 import useSWR from "swr";
-import { useState } from "react/cjs/react.development";
-import GeneratePDF from "../../lib/GeneratePDF";
 import { findEmployeeFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
@@ -18,6 +16,7 @@ const ChartsContent = ({
   handleCurrentEmployeeId,
   handleSelectCurrentModel,
   currentModel,
+  saveFinalObject,
 }) => {
   // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
@@ -239,6 +238,8 @@ const ChartsContent = ({
         payload: { finalObject: filteredArrayObject },
       });
 
+      saveFinalObject(filteredArrayObject, "0");
+
       let filteredArrayEmployees = state.finalEmployeeList.filter(
         (item) => item !== employeeToBeDeleted[0].fields.id
       );
@@ -247,6 +248,7 @@ const ChartsContent = ({
         type: ACTION_TYPES.SET_FINAL_EMPLOYEE_LIST,
         payload: { finalEmployeeList: filteredArrayEmployees },
       });
+      saveFinalObject(filteredArrayEmployees, "1");
     }
     handleSelectCurrentEmployee("");
     handleCurrentEmployeeId("");
@@ -313,7 +315,6 @@ const ChartsContent = ({
       <div
         onClick={() => {
           handlePreview(true);
-          handleAddEmployeeToFinalObject(currentEmployee);
           handleCurrentEmployeeId("");
         }}
         className="flex float-right font-semibold text-sm bg-teal-400 text-white rounded-md mt-4 p-3 cursor-pointer mr-5"
