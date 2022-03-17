@@ -419,7 +419,7 @@ const AddOperationsModal = ({
                 handleSaveButton();
               }}
             >
-              Save
+              Salvare
             </button>
           </div>
         </div>

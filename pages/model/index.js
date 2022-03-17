@@ -493,7 +493,7 @@ const ModalAddOperation = ({
                 handleSaveButton();
               }}
             >
-              Save
+              Salvare
             </button>
           </div>
         </div>

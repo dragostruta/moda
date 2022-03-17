@@ -36,7 +36,10 @@ const ResultTable = () => {
             if (element.fields.model === item.fields.id) {
               print = true;
             }
-            element.fields.operationsSelectedList.map((item2) => {
+            if (!element.fields.operationsSelectedList) {
+              element.fields.operationsSelectedList = [];
+            }
+            element.fields.operationsSelectedList?.map((item2) => {
               if (item2.fields.model === item.fields.id) {
                 sum += parseFloat(item2.fields.cost);
               }
