@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import useSWR from "swr";
+import ReactPaginate from "react-paginate";
 import { findEmployeeFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 
@@ -21,6 +22,24 @@ const ChartsContent = ({
   // Context State initialization
   const { dispatch, state } = useContext(StoreContext);
   const { data, error } = useSWR("/api/model/getModelAll", fetcher);
+  const [currentItems, setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 8;
+
+  useEffect(() => {
+    if (state.finalObject) {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(state.finalObject.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(state.finalObject.length / itemsPerPage));
+    }
+  }, [itemOffset, itemsPerPage, state.finalObject]);
+
+  const handlePageClick = (event) => {
+    const newOffset =
+      (event.selected * itemsPerPage) % state.finalObject.length;
+    setItemOffset(newOffset);
+  };
 
   // Component for an entire row
   // employeeId - current employee id
@@ -205,22 +224,39 @@ const ChartsContent = ({
   const EmployeeTable = () => {
     return (
       <>
-        {state.finalObject.map((item, key) => {
+        {currentItems.map((item, key) => {
           return (
             <EmployeeRow
               key={key}
-              employeeId={state.finalObject[key].id}
-              currentModelId={state.finalObject[key].fields.model}
-              total={calculateTotalPriceForEmplyee(state.finalObject[key])}
-              totalTime={calculateTotalTimeForEmployee(state.finalObject[key])}
+              employeeId={currentItems[key].id}
+              currentModelId={currentItems[key].fields.model}
+              total={calculateTotalPriceForEmplyee(currentItems[key])}
+              totalTime={calculateTotalTimeForEmployee(currentItems[key])}
             />
           );
         })}
-        <EmployeeRow
-          employeeId={currentEmployeeId}
-          lastOne={true}
-          currentModelId={currentModel}
-        />
+        {pageCount * itemsPerPage === itemOffset + itemsPerPage ? (
+          <EmployeeRow
+            employeeId={currentEmployeeId}
+            lastOne={true}
+            currentModelId={currentModel}
+          />
+        ) : (
+          <tr>
+            <td></td>
+          </tr>
+        )}
+        {currentItems.length === 0 ? (
+          <EmployeeRow
+            employeeId={currentEmployeeId}
+            lastOne={true}
+            currentModelId={currentModel}
+          />
+        ) : (
+          <tr>
+            <td></td>
+          </tr>
+        )}
       </>
     );
   };
@@ -311,6 +347,57 @@ const ChartsContent = ({
             </div>
           </div>
         </div>
+        <ReactPaginate
+          nextLabel={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
+          }
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={3}
+          marginPagesDisplayed={2}
+          pageCount={pageCount}
+          previousLabel={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+          }
+          pageClassName="page-item"
+          pageLinkClassName="page-link"
+          previousClassName="page-item pt-1"
+          previousLinkClassName="page-link"
+          nextClassName="page-item pt-1"
+          nextLinkClassName="page-link"
+          breakLabel="..."
+          breakClassName="page-item"
+          breakLinkClassName="page-link"
+          containerClassName="pagination"
+          activeClassName="active bg-teal-400 rounded-full px-3 py-0.5 border-1.5 shadow text-white"
+          renderOnZeroPageCount={null}
+          className="flex justify-evenly px-[30rem] py-6 text-md"
+        />
       </section>
       <div
         onClick={() => {

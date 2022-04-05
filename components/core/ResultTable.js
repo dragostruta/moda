@@ -48,7 +48,8 @@ const ResultTable = () => {
           if (print) {
             return (
               <div>
-                Total {item.fields.id + " - " + item.fields.name} : {sum} lei
+                Total {item.fields.id + " - " + item.fields.name} :{" "}
+                {sum.toFixed(2)} lei
               </div>
             );
           }

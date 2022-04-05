@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { findOperationFromArray } from "../../lib/utils";
 import { ACTION_TYPES, StoreContext } from "../../store/store-context";
 import GetOperationAll from "../fetcher/getOperationsAll";
+import ReactPaginate from "react-paginate";
 
 const _ = require("lodash");
 
@@ -29,6 +30,25 @@ const AddOperationsModal = ({
   const [operationList, setOperationList] = useState([]);
 
   const [modelsOperationList, setModelsOperationList] = useState([]);
+
+  const [currentItems, setCurrentItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 8;
+
+  useEffect(() => {
+    if (operationsSelectedList) {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(operationsSelectedList.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(operationsSelectedList.length / itemsPerPage));
+    }
+  }, [itemOffset, itemsPerPage, operationsSelectedList]);
+
+  const handlePageClick = (event) => {
+    const newOffset =
+      (event.selected * itemsPerPage) % operationsSelectedList.length;
+    setItemOffset(newOffset);
+  };
 
   const getModelOperationAllFunc = async () => {
     const response = await fetch(
@@ -84,7 +104,7 @@ const AddOperationsModal = ({
       list.sort((a, b) => {
         return a.fields.id - b.fields.id;
       });
-
+      console.log(list);
       setOperationList(list);
     }
   }, [operationsData, modelsOperationList]);
@@ -220,30 +240,52 @@ const AddOperationsModal = ({
   const OperationTable = () => {
     return (
       <>
-        {operationsSelectedList.map((item, key) => {
+        {currentItems.map((item, key) => {
           return (
             <OperationRow
               key={key}
-              operationId={operationsSelectedList[key].id}
-              time={operationsSelectedList[key].fields.time}
-              cost={operationsSelectedList[key].fields.cost}
-              category={operationsSelectedList[key].fields.category}
-              priceHour={operationsSelectedList[key].fields.priceHour}
-              total={operationsSelectedList[key].fields.total}
-              multiply={operationsSelectedList[key].fields.multiply}
+              operationId={currentItems[key].id}
+              time={currentItems[key].fields.time}
+              cost={currentItems[key].fields.cost}
+              category={currentItems[key].fields.category}
+              priceHour={currentItems[key].fields.priceHour}
+              total={currentItems[key].fields.total}
+              multiply={currentItems[key].fields.multiply}
             />
           );
         })}
-        <OperationRow
-          operationId={currentOperationId}
-          lastOne={true}
-          time={currentOperation.fields?.time}
-          cost={currentOperation.fields?.cost}
-          category={currentOperation.fields?.category}
-          priceHour={currentOperation.fields?.priceHour}
-          total={currentOperation.fields?.total}
-          multiply={currentOperation.fields?.multiply}
-        />
+        {pageCount * itemsPerPage === itemOffset + itemsPerPage ? (
+          <OperationRow
+            operationId={currentOperationId}
+            lastOne={true}
+            time={currentOperation.fields?.time}
+            cost={currentOperation.fields?.cost}
+            category={currentOperation.fields?.category}
+            priceHour={currentOperation.fields?.priceHour}
+            total={currentOperation.fields?.total}
+            multiply={currentOperation.fields?.multiply}
+          />
+        ) : (
+          <tr>
+            <td></td>
+          </tr>
+        )}
+        {currentItems.length === 0 ? (
+          <OperationRow
+            operationId={currentOperationId}
+            lastOne={true}
+            time={currentOperation.fields?.time}
+            cost={currentOperation.fields?.cost}
+            category={currentOperation.fields?.category}
+            priceHour={currentOperation.fields?.priceHour}
+            total={currentOperation.fields?.total}
+            multiply={currentOperation.fields?.multiply}
+          />
+        ) : (
+          <tr>
+            <td></td>
+          </tr>
+        )}
       </>
     );
   };
@@ -412,6 +454,57 @@ const AddOperationsModal = ({
               <OperationTable />
             </tbody>
           </table>
+          <ReactPaginate
+            nextLabel={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            }
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            marginPagesDisplayed={2}
+            pageCount={pageCount}
+            previousLabel={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+            }
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item pt-1"
+            previousLinkClassName="page-link"
+            nextClassName="page-item pt-1"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active bg-teal-400 rounded-full px-3 py-0.5 border-1.5 shadow text-white"
+            renderOnZeroPageCount={null}
+            className="flex justify-evenly px-[30rem] py-6 text-md"
+          />
           <div className="flex justify-end p-4">
             <button
               className="bg-teal-400 rounded p-2 font-semibold text-white"
