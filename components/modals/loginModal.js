@@ -54,8 +54,8 @@ const LoginModal = ({ handleToggleLoginModal }) => {
         }
       }}
     >
-      <div className="relative w-full max-w-md px-4 h-full md:h-auto">
-        <div className="bg-white rounded-lg shadow relative">
+      <div className="lg:w-1/4 md:w-1/3">
+        <div className="bg-white rounded-lg shadow relative p-2">
           <div className="flex justify-end p-2">
             <button
               type="button"
