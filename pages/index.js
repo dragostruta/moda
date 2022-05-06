@@ -7,6 +7,7 @@ import LoginModal from "../components/modals/loginModal";
 import { ACTION_TYPES, StoreContext } from "../store/store-context";
 import LoadingSpinner from "../components/loading/loadingSpinner";
 import { toggleLoadingSpinner } from "../lib/utils";
+import ProductList from "../components/content/productList";
 
 export default function Home() {
   const { dispatch, state } = useContext(StoreContext);
@@ -58,6 +59,9 @@ export default function Home() {
           ) : (
             ""
           )}
+        </section>
+        <section>
+          <ProductList />
         </section>
         <section>{loadingSpinner ? <LoadingSpinner /> : ""}</section>
       </main>

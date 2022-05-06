@@ -8,10 +8,15 @@ import { ACTION_TYPES } from "../../store/store-context";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { toggleLoadingSpinner } from "../../lib/utils";
+import { Heart, ShoppingCart, ShoppingCartOutline } from "heroicons-react";
+import ShoppingCartComponent from "../content/shoppingCart";
+import FavoritesComponent from "../content/favoritesModal";
 
 const NavBar = ({ handleToggleLoginModal }) => {
   const [loggedUser, setLoggedUser] = useState("");
   const { state, dispatch } = useContext(StoreContext);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [favoritesOpen, setFavritesOpen] = useState(false);
 
   const router = useRouter();
 
@@ -40,6 +45,11 @@ const NavBar = ({ handleToggleLoginModal }) => {
     router.push("/");
   };
 
+  const closeModal = () => {
+    setCartOpen(false);
+    setFavritesOpen(false);
+  };
+
   return (
     <div className="bg-white border-b lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-40">
       <div className="px-12 py-5 mx-auto space-y-4 lg:space-y-0 lg:flex lg:items-center lg:justify-between lg:space-x-10">
@@ -63,6 +73,27 @@ const NavBar = ({ handleToggleLoginModal }) => {
             )}
           </div>
           <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:space-x-4">
+            <ShoppingCartOutline
+              className="h-6 w-6 cursor-pointer"
+              onClick={() => {
+                if (!cartOpen && !favoritesOpen) {
+                  setCartOpen(true);
+                }
+              }}
+            />
+            <Heart
+              className="h-6 w-6 text-red-600 cursor-pointer"
+              onClick={() => {
+                if (!cartOpen && !favoritesOpen) {
+                  setFavritesOpen(true);
+                }
+              }}
+            />
+            <ShoppingCartComponent isOpen={cartOpen} closeModal={closeModal} />
+            <FavoritesComponent
+              isOpen={favoritesOpen}
+              closeModal={closeModal}
+            />
             {loggedUser === "" ? (
               <div
                 className="flex items-center justify-center h-12 px-4 text-sm font-semibold text-center transition-colors duration-200 transform text-white rounded-md lg:h-10 bg-teal-400 hover:bg-teal-300 cursor-pointer"
