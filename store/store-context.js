@@ -9,6 +9,8 @@ export const ACTION_TYPES = {
   SET_FINAL_OBJECT: "SET_FINAL_OBJECT",
   SET_FINAL_EMPLOYEE_LIST: "SET_FINAL_EMPLOYEE_LIST",
   SET_FINAL_MODEL_LIST: "SET_FINAL_MODEL_LIST",
+  SET_CART_ITEMS: "SET_CART_ITEMS",
+  SET_FAVORITE_ITEMS: "SET_FAVORIE_ITEMS",
 };
 
 const storeReducer = (state, action) => {
@@ -31,6 +33,12 @@ const storeReducer = (state, action) => {
     case ACTION_TYPES.SET_FINAL_MODEL_LIST: {
       return { ...state, finalModelList: action.payload.finalModelList };
     }
+    case ACTION_TYPES.SET_CART_ITEMS: {
+      return { ...state, cartItems: action.payload.cartItems };
+    }
+    case ACTION_TYPES.SET_FAVORITE_ITEMS: {
+      return { ...state, favoriteItems: action.payload.favoriteItems };
+    }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -44,6 +52,8 @@ const StoreProvider = ({ children }) => {
     finalObject: [],
     finalEmployeeList: [],
     finalModelList: [],
+    cartItems: [],
+    favoriteItems: [],
   };
 
   const [state, dispatch] = useReducer(storeReducer, initialState);
