@@ -5,7 +5,7 @@ import {
 
 const createModel = async (req, res) => {
   if (req.method === "POST") {
-    const { id, name } = req.body;
+    const { id, name, category, price, image } = req.body;
 
     try {
       if (id) {
@@ -19,6 +19,9 @@ const createModel = async (req, res) => {
             const records = await createModelByFields({
               id,
               name,
+              category,
+              price,
+              image,
             });
             res.json(records);
           } else {

@@ -8,8 +8,40 @@ import { ACTION_TYPES, StoreContext } from "../store/store-context";
 import LoadingSpinner from "../components/loading/loadingSpinner";
 import { toggleLoadingSpinner } from "../lib/utils";
 import ProductList from "../components/content/productList";
+import { gql, request, GraphQLClient } from "graphql-request";
 
-export default function Home() {
+export const getStaticProps = async () => {
+  const url = process.env.ENDPOINT;
+  const graphQLClient = new GraphQLClient(url, {
+    headers: {
+      Authorization: process.env.GRAPH_CMS_TOKEN,
+    },
+  });
+
+  const productsQuery = gql`
+    query MyQuery {
+      products {
+        id
+        price
+        name
+        category
+        image {
+          url
+        }
+        airtableModelId
+      }
+    }
+  `;
+
+  const data = await graphQLClient.request(productsQuery);
+  const products = data.products;
+
+  return {
+    props: { products },
+  };
+};
+
+export default function Home({ products }) {
   const { dispatch, state } = useContext(StoreContext);
   const { modalLogin, loadingSpinner } = state;
 
@@ -61,7 +93,7 @@ export default function Home() {
           )}
         </section>
         <section>
-          <ProductList />
+          <ProductList products={products} />
         </section>
         <section>{loadingSpinner ? <LoadingSpinner /> : ""}</section>
       </main>

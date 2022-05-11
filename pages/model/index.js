@@ -64,16 +64,12 @@ const OperationRow = ({
       <td className="p-2 whitespace-nowrap">
         <div className="text-center">{category ?? ""}</div>
       </td>
-      <td className="p-2 whitespace-nowrap">
-        <div className="text-center font-medium text-teal-400">
-          {priceHour ?? 0}
-        </div>
-      </td>
+
       <td className="p-2 whitespace-nowrap">
         <div className="text-center">{time ?? "00:00"}</div>
       </td>
       <td className="p-2 whitespace-nowrap">
-        <div className="font-medium text-teal-400 w-6 flex">
+        <div className="font-medium text-teal-400 w-6 flex mx-auto">
           {operationId ? (
             !multiply ? (
               <input
@@ -459,9 +455,7 @@ const ModalAddOperation = ({
                     Categorie lucrari
                   </div>
                 </th>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-center">Lei/Ora</div>
-                </th>
+
                 <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-center">Timp</div>
                 </th>
@@ -587,6 +581,75 @@ const ModalAdd = ({
                 }}
               />
               <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
+            </div>
+            <div>
+              <label
+                htmlFor="price"
+                className="text-sm font-medium text-gray-900 block mb-2"
+              >
+                Pret
+              </label>
+              <input
+                type="text"
+                name="price"
+                id="price"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-400 focus:border-teal-400 block w-full p-2.5"
+                required
+                value={formValue.price}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+              <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
+            </div>
+            <div>
+              <label
+                htmlFor="category"
+                className="text-sm font-medium text-gray-900 block mb-2"
+              >
+                Categorie
+              </label>
+              <input
+                type="text"
+                name="category"
+                id="category"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-400 focus:border-teal-400 block w-full p-2.5"
+                required
+                value={formValue.category}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+              <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
+            </div>
+            <div class="flex justify-center">
+              <div class="mb-3 w-96">
+                <label
+                  htmlFor="category"
+                  className="text-sm font-medium text-gray-900 block mb-2"
+                >
+                  Imagine
+                </label>
+                <input
+                  class="form-control
+    block
+    w-full
+    px-2
+    py-1.5
+    text-xl
+    font-normal
+    text-gray-700
+    bg-white bg-clip-padding
+    border border-solid border-gray-300
+    rounded
+    transition
+    ease-in-out
+    m-0
+    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  id="file"
+                  type="file"
+                />
+              </div>
             </div>
             <button
               type="submit"
@@ -731,6 +794,9 @@ const Dashboard = () => {
       body: JSON.stringify({
         id: formValue.id,
         name: formValue.name,
+        category: formValue.category,
+        price: formValue.price,
+        file: formValue.file,
       }),
     })
       .then((response) => response.json())
