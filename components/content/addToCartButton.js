@@ -89,7 +89,7 @@ const AddToCartButton = ({ product }) => {
                 payload: { cartItems: items },
               });
             } else {
-              product.quantity += 1;
+              product.quantity = 1;
               dispatch({
                 type: ACTION_TYPES.SET_CART_ITEMS,
                 payload: { cartItems: state.cartItems.concat(product) },
