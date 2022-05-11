@@ -622,8 +622,8 @@ const ModalAdd = ({
               />
               <p className="p-2 text-red-500 font-semibold text-sm">{""}</p>
             </div>
-            <div class="flex justify-center">
-              <div class="mb-3 w-96">
+            <div className="flex justify-center">
+              <div className="mb-3 w-96">
                 <label
                   htmlFor="category"
                   className="text-sm font-medium text-gray-900 block mb-2"
@@ -631,7 +631,7 @@ const ModalAdd = ({
                   Imagine
                 </label>
                 <input
-                  class="form-control
+                  className="form-control
     block
     w-full
     px-2
