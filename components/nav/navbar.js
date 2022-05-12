@@ -17,8 +17,17 @@ const NavBar = ({ handleToggleLoginModal }) => {
   const { state, dispatch } = useContext(StoreContext);
   const [cartOpen, setCartOpen] = useState(false);
   const [favoritesOpen, setFavritesOpen] = useState(false);
-
+  const [showButtons, setShowButtons] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    let blackListRoutes = ["/operations", "/employees", "/charts", "/model"];
+    if (blackListRoutes.find((element) => element === router.route)) {
+      setShowButtons(false);
+    } else {
+      setShowButtons(true);
+    }
+  }, []);
 
   useEffect(async () => {
     if (state.loggedUser) {
@@ -55,16 +64,27 @@ const NavBar = ({ handleToggleLoginModal }) => {
       <div className="px-12 py-5 mx-auto space-y-4 lg:space-y-0 lg:flex lg:items-center lg:justify-between lg:space-x-10">
         <div className="flex justify-between">
           <div className="text-gray-800">
-            <Logo />
+            <Link href={"/"}>
+              <a>
+                <Logo />
+              </a>
+            </Link>
           </div>
         </div>
         <div className="lg:flex lg:flex-row lg:items-center lg:justify-between lg:flex-1">
           <div className="flex flex-col space-y-3 lg:space-y-0 lg:flex-row lg:space-x-6 xl:space-x-8 lg:items-center">
+            <Link href={"/products"}>
+              <a>
+                <span className="font-semibold hover:text-teal-400 text-md">
+                  Produse
+                </span>
+              </a>
+            </Link>
             {router.route === "/" && loggedUser ? (
               <Link href={"/charts"}>
                 <a>
                   <span className="font-semibold hover:text-teal-400 text-md">
-                    Acasa
+                    Admin
                   </span>
                 </a>
               </Link>
@@ -73,22 +93,28 @@ const NavBar = ({ handleToggleLoginModal }) => {
             )}
           </div>
           <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:space-x-4">
-            <ShoppingCartOutline
-              className="h-6 w-6 cursor-pointer"
-              onClick={() => {
-                if (!cartOpen && !favoritesOpen) {
-                  setCartOpen(true);
-                }
-              }}
-            />
-            <Heart
-              className="h-6 w-6 text-red-600 cursor-pointer"
-              onClick={() => {
-                if (!cartOpen && !favoritesOpen) {
-                  setFavritesOpen(true);
-                }
-              }}
-            />
+            {showButtons ? (
+              <div className="flex space-x-3">
+                <ShoppingCartOutline
+                  className="h-6 w-6 cursor-pointer"
+                  onClick={() => {
+                    if (!cartOpen && !favoritesOpen) {
+                      setCartOpen(true);
+                    }
+                  }}
+                />
+                <Heart
+                  className="h-6 w-6 text-red-600 cursor-pointer"
+                  onClick={() => {
+                    if (!cartOpen && !favoritesOpen) {
+                      setFavritesOpen(true);
+                    }
+                  }}
+                />
+              </div>
+            ) : (
+              ""
+            )}
             <ShoppingCartComponent isOpen={cartOpen} closeModal={closeModal} />
             <FavoritesComponent
               isOpen={favoritesOpen}

@@ -7,6 +7,7 @@ import Model from "../../components/content/model";
 import GetOperationAll from "../../components/fetcher/getOperationsAll";
 import GetModelOperationAll from "../../components/fetcher/getModelOperationAll";
 import { mutate } from "swr";
+import { gql, request, GraphQLClient } from "graphql-request";
 import { findOperationFromArray } from "../../lib/utils";
 
 const _ = require("lodash");
