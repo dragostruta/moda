@@ -3,4 +3,7 @@ module.exports = {
   images: {
     domains: ["media.graphassets.com"],
   },
+  api: {
+    bodyParser: false,
+  },
 };

@@ -500,6 +500,7 @@ const ModalAddOperation = ({
 const ModalAdd = ({
   handleSetToggleModalAdd,
   handleChange,
+  handleFileChange,
   formValue,
   handleCreateObject,
 }) => {
@@ -649,6 +650,9 @@ const ModalAdd = ({
     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                   id="file"
                   type="file"
+                  onChange={(e) => {
+                    handleFileChange(e);
+                  }}
                 />
               </div>
             </div>
@@ -763,6 +767,9 @@ const Dashboard = () => {
   const [formValue, setFormValue] = useState({
     id: "",
     name: "",
+    category: "",
+    price: "",
+    selectedFile: "",
   });
   const [currentModelId, setCurrentModelId] = useState("");
 
@@ -784,21 +791,28 @@ const Dashboard = () => {
     });
   };
 
+  const handleFileChange = (event) => {
+    setFormValue((prevState) => {
+      return {
+        ...prevState,
+        selectedFile: event.target.files[0],
+      };
+    });
+  };
+
   const handleCreateObject = (e) => {
+    const formData = new FormData();
+    formData.append("name", formValue.name);
+    formData.append("category", formValue.category);
+    formData.append("price", formValue.price);
+    formData.append("id", formValue.id);
+    formData.append("image", formValue.selectedFile);
+
     e.preventDefault();
     fetch("/api/model/createModel", {
       method: "POST",
       mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: formValue.id,
-        name: formValue.name,
-        category: formValue.category,
-        price: formValue.price,
-        file: formValue.file,
-      }),
+      body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -806,6 +820,9 @@ const Dashboard = () => {
         setFormValue({
           id: "",
           name: "",
+          category: "",
+          price: "",
+          selectedFile: "",
         });
         mutate("/api/model/getModelAll");
       });
@@ -845,6 +862,7 @@ const Dashboard = () => {
         <ModalAdd
           handleSetToggleModalAdd={handleSetToggleModalAdd}
           handleChange={handleChange}
+          handleFileChange={handleFileChange}
           formValue={formValue}
           handleCreateObject={handleCreateObject}
         />
